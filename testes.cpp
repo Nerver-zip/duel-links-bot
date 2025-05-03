@@ -16,8 +16,6 @@ Mat capturaTela(float scale) {
     int width = GetSystemMetrics(SM_CXSCREEN);  // Largura da tela
     int height = GetSystemMetrics(SM_CYSCREEN); // Altura da tela
 
-    // Escala de 125%, ajustando a resolução real
-    float scale = 1.25;
     int adjustedWidth = static_cast<int>(width * scale);  // Ajusta a largura
     int adjustedHeight = static_cast<int>(height * scale); // Ajusta a altura
 
@@ -73,7 +71,7 @@ int main() {
     std::cout << "TESTE!" << "\n";
     this_thread::sleep_for(chrono::seconds(3));
 
-    Mat botao = imread("C:/Users/marce/Desktop/duelLinks-auto-gate-farm/button.png");
+    Mat botao = imread("C:/Users/marce/Desktop/duelLinks-auto-gate-farm/assets/select3x_button.png");
     if (botao.empty()) {
         cout << "Erro ao carregar button.png" << endl;
         return -1;
