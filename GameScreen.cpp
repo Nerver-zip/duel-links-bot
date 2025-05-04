@@ -1,8 +1,15 @@
 #include "GameScreen.h"
+#include "Util.h"
+#include "MouseEvents.h"
 
 using namespace cv;
 
 GameScreen::GameScreen(float scale) : scale(scale) {}
+
+GameScreen& GameScreen::getInstance(float scale) {
+    static GameScreen instance(scale);
+    return instance;
+}
 
 void GameScreen::screenshot() {
     HWND hwnd = GetDesktopWindow();
@@ -52,10 +59,25 @@ MatchResult GameScreen::findComponent(const std::string& path, float accuracy){
     return MatchResult(coordinates);
 }
 
-void GameScreen::updateScreen(){
+Mat GameScreen::updateScreen(){
     screenshot();
+    return src;
 }
 
-MatchResult GameScreen::findComponent(Component c, float accuracy){
+MatchResult GameScreen::findComponent(const Component& c, float accuracy){
     return findComponent(componentPaths[c], accuracy);
 }
+
+bool GameScreen::findComponent(const Component& c){
+    auto result = findComponent(componentPaths[c], 0.9);
+    return result.found;
+}
+
+MatchResult GameScreen::clickComponent(const Component& c, float accuracy){
+    MouseEvents mouse(scale);
+    auto result = findComponent(componentPaths[c], accuracy);
+    if (result.found)
+        mouse.leftClick(result.center.first, result.center.second);
+    return result;
+}
+

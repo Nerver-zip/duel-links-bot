@@ -5,50 +5,14 @@
 #include <windows.h>
 #include <iostream>
 #include <unordered_map>
-
-enum Component {
-    ARROW_BACK_BUTTON,
-    ATTACK_BUTTON,
-    BATTLE_BUTTON,
-    CLOSE_BUTTON,
-    CONFIRM_BUTTON_RED,
-    CONNECTION_ERROR_SCREEN,
-    DIALOGUE_BUTTON,
-    DUEL_BUTTON,
-    END_TURN_BUTTON,
-    ERROR_SCREEN,
-    GATE_BUTTON_MINIMIZED,
-    GATE_BUTTON_RED_MINIMIZED,
-    GATE_BUTTON_RED,
-    GATE_BUTTON_SELECTED_MINIMIZED,
-    GATE_BUTTON_SELECTED,
-    GATE_BUTTON_STREET_MINIMIZED,
-    GATE_BUTTON_STREET,
-    GATE_BUTTON,
-    LOAD_BLACK,
-    LVL_10_BUTTON,
-    NEXT_BUTTON,
-    NORMAL_SUMMON_BUTTON,
-    OK_BUTTON,
-    RETRY_BUTTON,
-    REWARDS1X_BUTTON_MINIMIZED,
-    REWARDS1X_BUTTON,
-    SELECT_PHASE_BUTTON,
-    SELECT_POSITION_BUTTON,
-    SELECT3X_BUTTON
-};
-
-struct MatchResult {
-    bool found;
-    std::pair<int, int> center;
-    MatchResult() : found(false), center({-1,-1}) {}
-    MatchResult(std::pair<int, int> center) : found(true), center(center) {}
-};
+#include "Util.h"
 
 class GameScreen {
 private:
     cv::Mat src;
     float scale;
+
+    GameScreen(float scale);
 
     static inline std::unordered_map<Component, std::string> componentPaths = {
         {ARROW_BACK_BUTTON, "assets/arrow_back_button.png"},
@@ -87,9 +51,18 @@ private:
     MatchResult findComponent(const std::string& path, float accuracy);
 
 public:
-    GameScreen(float scale);
-    void updateScreen();
-    MatchResult findComponent(Component c, float accuracy);
+    GameScreen(const GameScreen&) = delete;
+    GameScreen& operator=(const GameScreen&) = delete;
+
+    static GameScreen& getInstance(float scale);
+    cv::Mat updateScreen();
+    MatchResult findComponent(const Component& c, float accuracy);
+    bool findComponent(const Component& c);
+    MatchResult clickComponent(const Component& c, float accuracy);
+    MatchResult clickOkButton();
+    MatchResult clickCloseButton();
+    MatchResult clickConfirmButton();
+    MatchResult clickRetryButton();
 };
 
 #endif
