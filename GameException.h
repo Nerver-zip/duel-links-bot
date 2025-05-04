@@ -8,8 +8,6 @@
 #include "Util.h"
 
 class GameException {
-private:
-    float scale;
 public:
     GameException(float scale);
     bool checkConnectionError();

@@ -7,17 +7,21 @@
 using namespace cv;
 using namespace std;
 
-// Captura a tela inteira do desktop como Mat do OpenCV
+// Resolução original de captura (Full HD)
+const int ORIGINAL_WIDTH = 1920;
+const int ORIGINAL_HEIGHT = 1080;
+
+// Captura a tela com escala
 Mat capturaTela(float scale) {
     HWND hwnd = GetDesktopWindow();
     HDC hwindowDC = GetDC(hwnd);
     HDC hwindowCompatibleDC = CreateCompatibleDC(hwindowDC);
 
-    int width = GetSystemMetrics(SM_CXSCREEN);  // Largura da tela
-    int height = GetSystemMetrics(SM_CYSCREEN); // Altura da tela
+    int width = GetSystemMetrics(SM_CXSCREEN);
+    int height = GetSystemMetrics(SM_CYSCREEN);
 
-    int adjustedWidth = static_cast<int>(width * scale);  // Ajusta a largura
-    int adjustedHeight = static_cast<int>(height * scale); // Ajusta a altura
+    int adjustedWidth = static_cast<int>(width * scale);
+    int adjustedHeight = static_cast<int>(height * scale);
 
     HBITMAP hbwindow = CreateCompatibleBitmap(hwindowDC, adjustedWidth, adjustedHeight);
     SelectObject(hwindowCompatibleDC, hbwindow);
@@ -27,7 +31,7 @@ Mat capturaTela(float scale) {
     BITMAPINFOHEADER bi;
     bi.biSize = sizeof(BITMAPINFOHEADER);
     bi.biWidth = adjustedWidth;
-    bi.biHeight = -adjustedHeight; // negativo = origem no topo
+    bi.biHeight = -adjustedHeight;
     bi.biPlanes = 1;
     bi.biBitCount = 24;
     bi.biCompression = BI_RGB;
@@ -42,49 +46,68 @@ Mat capturaTela(float scale) {
     return src;
 }
 
-// Simula clique do mouse em (x, y) com a compensação para a scale
+// Função para redimensionar o template baseado na resolução do jogo
+Mat redimensionarTemplateParaResolucao(const string& caminho, int larguraDest, int alturaDest) {
+    Mat original = imread(caminho);
+    if (original.empty()) {
+        cerr << "Erro ao carregar o template." << endl;
+        return Mat();
+    }
+
+    // Escala proporcional baseada na resolução original do botão (1920x1080)
+    float escalaX = static_cast<float>(larguraDest) / ORIGINAL_WIDTH;
+    float escalaY = static_cast<float>(alturaDest) / ORIGINAL_HEIGHT;
+    float escala = min(escalaX, escalaY);  // Mantém proporção
+
+    // Redimensiona com escala proporcional
+    Mat redimensionado;
+    resize(original, redimensionado, Size(), escala, escala, INTER_LINEAR);
+
+    // Exibe o botão para debug
+    imshow("Botao Redimensionado", redimensionado);
+    waitKey(1);
+
+    return redimensionado;
+}
+
+// Simula clique do mouse ajustado pela escala
 void clicar(int x, int y, float scale) {
-    // Ajusta as coordenadas para a resolução da tela real considerando a scale
-    x = static_cast<int>(x / scale); // Corrige a posição do clique
-    y = static_cast<int>(y / scale); // Corrige a posição do clique
+    x = static_cast<int>(x / scale);
+    y = static_cast<int>(y / scale);
 
     SetCursorPos(x, y);
-
     Sleep(1000);
 
-    // Prepara estrutura para pressionar o botão esquerdo
     INPUT inputDown = {0};
     inputDown.type = INPUT_MOUSE;
     inputDown.mi.dwFlags = MOUSEEVENTF_LEFTDOWN;
 
-    // Prepara estrutura para soltar o botão esquerdo
     INPUT inputUp = {0};
     inputUp.type = INPUT_MOUSE;
     inputUp.mi.dwFlags = MOUSEEVENTF_LEFTUP;
 
-    // Envia os dois eventos: clique completo
-    INPUT inputs[2] = { inputDown, inputUp };
-    UINT sent = SendInput(2, inputs, sizeof(INPUT));
+    INPUT inputs[2] = {inputDown, inputUp};
+    SendInput(2, inputs, sizeof(INPUT));
 }
 
 int main() {
     std::cout << "TESTE!" << "\n";
     this_thread::sleep_for(chrono::seconds(3));
 
-    Mat botao = imread("C:/Users/marce/Desktop/duelLinks-auto-gate-farm/assets/select3x_button.png");
+    // Defina a resolução de destino do jogo (exemplo: 800x450)
+    int larguraDest = 1280;
+    int alturaDest = 720;
+
+    // Redimensiona o botão com base na resolução de destino
+    Mat botao = redimensionarTemplateParaResolucao("C:/Users/marce/Desktop/duelLinks-auto-gate-farm/assets/player_turn_mp.png", larguraDest, alturaDest);
     if (botao.empty()) {
-        cout << "Erro ao carregar button.png" << endl;
         return -1;
     }
 
-    float scale = 1.25; // Escala de 125%
+    float scale = 1.25; // Ajuste de escala para captura de tela e clique
 
     while (true) {
         Mat tela = capturaTela(scale);
-
-        // Exibe a tela capturada, redimensionada para uma visualização mais adequada
-        Mat telaRedimensionada;
-        resize(tela, telaRedimensionada, Size(tela.cols / 2, tela.rows / 2)); // Reduz pela metade
 
         Mat resultado;
         matchTemplate(tela, botao, resultado, TM_CCOEFF_NORMED);
@@ -93,17 +116,17 @@ int main() {
         Point minLoc, maxLoc;
         minMaxLoc(resultado, &minVal, &maxVal, &minLoc, &maxLoc);
 
-        if (maxVal >= 0.9) { // Ajuste a sensibilidade aqui
-            // Encontra a posição do botão com base na imagem original
+        if (maxVal >= 0.9) {
             int x = maxLoc.x + botao.cols / 2;
             int y = maxLoc.y + botao.rows / 2;
             cout << "Botao encontrado em: " << x << ", " << y << endl;
-            clicar(x, y, scale);  // Passa a escala para compensar o clique
+            clicar(x, y, scale);
         } else {
             cout << "Botao NAO encontrado" << endl;
-            return 0;
         }
+
         this_thread::sleep_for(chrono::seconds(3));
     }
+
     return 0;
 }

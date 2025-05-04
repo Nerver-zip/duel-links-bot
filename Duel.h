@@ -8,7 +8,6 @@
 
 class Duel {
 private:
-    float scale;
     static inline std::unordered_map<Component, std::string> componentPaths = {
         {ATTACK_BUTTON, "assets/attack_button.png"},
         {BATTLE_BUTTON, "assets/battle_button.png"},
@@ -19,7 +18,6 @@ private:
         {SELECT_POSITION_BUTTON, "assets/select_position_button.png"},
     };
 public:
-    Duel(float scale);
     bool startDuel();
     bool selectMonster();
     bool normalSummon();

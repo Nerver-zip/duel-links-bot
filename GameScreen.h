@@ -10,9 +10,18 @@
 class GameScreen {
 private:
     cv::Mat src;
+    Resolution dimensions;
     float scale;
 
-    GameScreen(float scale);
+    GameScreen(const Resolution dimensions, float scale);
+    static bool initialized;
+    static GameScreen instance;
+
+    static inline std::unordered_map<Resolution, std::pair<float, float>> resolutions = {
+        {_1920x1080, {1920.0,1080.0}},
+        {_1600x900, {1600.0, 900.0}},
+        {_1280x720, {1280.0, 720.0}}
+    };
 
     static inline std::unordered_map<Component, std::string> componentPaths = {
         {ARROW_BACK_BUTTON, "assets/arrow_back_button.png"},
@@ -49,15 +58,21 @@ private:
     void screenshot();
 
     MatchResult findComponent(const std::string& path, float accuracy);
+    cv::Mat resizeComponent(const std::string& path);
 
 public:
     GameScreen(const GameScreen&) = delete;
-    GameScreen& operator=(const GameScreen&) = delete;
 
-    static GameScreen& getInstance(float scale);
+    static GameScreen& init(const Resolution dimensions, float scale);
+    static GameScreen& getInstance();
+
+    Resolution getResolution();
+    float getScale();
+
     cv::Mat updateScreen();
     MatchResult findComponent(const Component& c, float accuracy);
     bool findComponent(const Component& c);
+
     MatchResult clickComponent(const Component& c, float accuracy);
     MatchResult clickOkButton();
     MatchResult clickCloseButton();

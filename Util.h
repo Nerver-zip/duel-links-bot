@@ -1,7 +1,11 @@
 #ifndef UTIL_H
 #define UTIL_H
 
-#include <iostream>
+enum Resolution { 
+    _1920x1080,
+    _1600x900,
+    _1280x720
+};
 
 enum Component {
     ARROW_BACK_BUTTON,
