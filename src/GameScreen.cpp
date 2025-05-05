@@ -1,6 +1,8 @@
 #include "GameScreen.h"
 #include "Util.h"
 #include "MouseEvents.h"
+#include <thread>
+#include <chrono>
 
 using namespace cv;
 
@@ -29,6 +31,10 @@ Resolution GameScreen::getResolution(){
 
 float GameScreen::getScale(){
     return this->scale;
+}
+
+void GameScreen::sleep(int ms){
+    std::this_thread::sleep_for(std::chrono::milliseconds(ms));
 }
 
 void GameScreen::screenshot() {
@@ -88,8 +94,8 @@ Mat GameScreen::updateScreen(){
     return src;
 }
 
-//Buttons were mapped in 1920x1080, we try to resize in order to find
-//May cause misbehavior the lower the resolution
+//Buttons were mapped in 1920x1080
+//May cause misbehavior the lower the resolution    
 Mat GameScreen::resizeComponent(const std::string& path){
     Mat original = imread(path);
     
@@ -115,9 +121,13 @@ bool GameScreen::findComponent(const Component& c){
     return result.found;
 }
 
-MatchResult GameScreen::clickComponent(const Component& c, float accuracy){
+MatchResult GameScreen::findComponent(const std::string& path){
+    return findComponent(path, 0.9);
+}
+
+MatchResult GameScreen::clickComponent(const std::string& path, float accuracy){
     MouseEvents mouse;
-    auto result = findComponent(componentPaths[c], accuracy);
+    auto result = findComponent(path, accuracy);
     if (result.found)
         mouse.leftClick(result.center.first, result.center.second);
     return result;

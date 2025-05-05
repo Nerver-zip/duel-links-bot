@@ -42,6 +42,7 @@ private:
         {GATE_BUTTON_STREET_MINIMIZED, "assets/gate_button_street_minimized.png"},
         {GATE_BUTTON_STREET, "assets/gate_button_street.png"},
         {GATE_BUTTON, "assets/gate_button.png"},
+        {INITIATE_LINK, "assets/initiate_link.png"},
         {LOAD_BLACK, "assets/load_black.png"},
         {LVL_10_BUTTON, "assets/lvl_10_button.png"},
         {NEXT_BUTTON, "assets/next_button.png"},
@@ -55,6 +56,7 @@ private:
         {SELECT3X_BUTTON, "assets/select3x_button.png"}
     };
 
+    void sleep(int ms);
     void screenshot();
 
     MatchResult findComponent(const std::string& path, float accuracy);
@@ -70,10 +72,12 @@ public:
     float getScale();
 
     cv::Mat updateScreen();
+
     MatchResult findComponent(const Component& c, float accuracy);
+    MatchResult findComponent(const std::string& path);
     bool findComponent(const Component& c);
 
-    MatchResult clickComponent(const Component& c, float accuracy);
+    MatchResult clickComponent(const std::string& path, float accuracy);
     MatchResult clickOkButton();
     MatchResult clickCloseButton();
     MatchResult clickConfirmButton();
