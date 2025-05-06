@@ -16,6 +16,8 @@ enum Component {
     CONNECTION_ERROR_SCREEN,
     DIALOGUE_BUTTON,
     DUEL_BUTTON,
+    DUEL_LOG,
+    DUEL_LOG_HALF,
     DURING_BATTLE_PHASE,
     END_TURN_BUTTON,
     ERROR_SCREEN,
@@ -34,6 +36,7 @@ enum Component {
     NEXT_BUTTON,
     NORMAL_SUMMON_BUTTON,
     OK_BUTTON,
+    OPPONENT_MONSTER_SELECT,
     OPPONENT_TURN,
     PLAYER_DRAW,
     PLAYER_TURN,
@@ -41,16 +44,16 @@ enum Component {
     REWARDS1X_BUTTON,
     REWARDS1X_BUTTON_MINIMIZED,
     RETRY_BUTTON,
-    SELECT3X_BUTTON,
+    REWARDS3X_BUTTON,
     SELECT_PHASE_BUTTON,
     SELECT_POSITION_BUTTON,
 };
 
 struct MatchResult {
     bool found;
-    std::pair<int, int> center;
-    MatchResult() : found(false), center({-1,-1}) {}
-    MatchResult(std::pair<int, int> center) : found(true), center(center) {}
+    std::pair<int, int> coordinates;
+    MatchResult() : found(false), coordinates({-1,-1}) {}
+    MatchResult(std::pair<int, int> coordinates) : found(true), coordinates(coordinates) {}
 };
 
 #endif

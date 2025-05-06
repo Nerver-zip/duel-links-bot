@@ -32,6 +32,6 @@ void MouseEvents::clickButton(const Component& button, float accuracy){
     GameScreen& screen = GameScreen::getInstance();
     auto result = screen.findComponent(button, accuracy);
     if (result.found)
-        leftClick(result.center.first, result.center.second);
+        leftClick(result.coordinates.first, result.coordinates.second);
 }
 

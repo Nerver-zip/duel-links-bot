@@ -53,10 +53,9 @@ private:
         {REWARDS1X_BUTTON, "assets/rewards1x_button.png"},
         {SELECT_PHASE_BUTTON, "assets/select_phase_button.png"},
         {SELECT_POSITION_BUTTON, "assets/select_position_button.png"},
-        {SELECT3X_BUTTON, "assets/select3x_button.png"}
+        {REWARDS3X_BUTTON, "assets/select3x_button.png"}
     };
 
-    void sleep(int ms);
     void screenshot();
 
     MatchResult findComponent(const std::string& path, float accuracy);
@@ -68,15 +67,18 @@ public:
     static GameScreen& init(const Resolution dimensions, float scale);
     static GameScreen& getInstance();
 
+    void sleep(int ms);
+    cv::Mat updateScreen();
+
     Resolution getResolution();
     float getScale();
 
-    cv::Mat updateScreen();
-
     MatchResult findComponent(const Component& c, float accuracy);
+    MatchResult getComponentTopCenterCoordinates(const std::string& path, float accuracy);
     MatchResult findComponent(const std::string& path);
     bool findComponent(const Component& c);
 
+    void click(int x, int y);
     MatchResult clickComponent(const std::string& path, float accuracy);
     MatchResult clickOkButton();
     MatchResult clickCloseButton();

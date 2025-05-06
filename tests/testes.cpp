@@ -95,11 +95,11 @@ int main() {
     this_thread::sleep_for(chrono::seconds(3));
 
     // Defina a resolução de destino do jogo (exemplo: 800x450)
-    int larguraDest = 1280;
-    int alturaDest = 720;
+    int larguraDest = 1920;
+    int alturaDest = 1080;
 
     // Redimensiona o botão com base na resolução de destino
-    Mat botao = redimensionarTemplateParaResolucao("C:/Users/marce/Desktop/duelLinks-auto-gate-farm/assets/player_turn_mp.png", larguraDest, alturaDest);
+    Mat botao = redimensionarTemplateParaResolucao("C:/Users/marce/Desktop/duelLinks-auto-gate-farm/assets/duel_log.png", larguraDest, alturaDest);
     if (botao.empty()) {
         return -1;
     }
@@ -122,7 +122,7 @@ int main() {
             cout << "Botao encontrado em: " << x << ", " << y << endl;
             clicar(x, y, scale);
         } else {
-            cout << "Botao NAO encontrado" << endl;
+            cout << "Botao NAO encontrado! " << "Correspondencia: " << maxVal << "\n";
         }
 
         this_thread::sleep_for(chrono::seconds(3));

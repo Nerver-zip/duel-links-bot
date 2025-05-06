@@ -37,6 +37,11 @@ void GameScreen::sleep(int ms){
     std::this_thread::sleep_for(std::chrono::milliseconds(ms));
 }
 
+void GameScreen::click(int x, int y){
+    MouseEvents mouse;
+    mouse.leftClick(x,y);
+}
+
 void GameScreen::screenshot() {
     HWND hwnd = GetDesktopWindow();
     HDC hwindowDC = GetDC(hwnd);
@@ -125,11 +130,36 @@ MatchResult GameScreen::findComponent(const std::string& path){
     return findComponent(path, 0.9);
 }
 
+MatchResult GameScreen::getComponentTopCenterCoordinates(const std::string& path, float accuracy){
+    Mat component = imread(path);
+    if (component.empty()) {
+        std::cerr << "Could not find component." << "\n";
+        return MatchResult();
+    }
+
+    if (dimensions != _1920x1080)
+        component = resizeComponent(path);
+    
+    Mat result;
+    matchTemplate(src, component, result, TM_CCOEFF_NORMED);
+    double minVal, maxVal;
+    Point minLoc, maxLoc;
+    minMaxLoc(result, &minVal, &maxVal, &minLoc, &maxLoc);
+    std::pair<int,int> coordinates;
+    if (maxVal >= accuracy) {
+        coordinates.first = maxLoc.x + component.cols / 2;
+        coordinates.second = maxLoc.y;
+    } else {
+        return MatchResult();
+    }
+    return MatchResult(coordinates);
+}
+
 MatchResult GameScreen::clickComponent(const std::string& path, float accuracy){
     MouseEvents mouse;
     auto result = findComponent(path, accuracy);
     if (result.found)
-        mouse.leftClick(result.center.first, result.center.second);
+        mouse.leftClick(result.coordinates.first, result.coordinates.second);
     return result;
 }
 
