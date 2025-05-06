@@ -1,6 +1,7 @@
 #include "GameScreen.h"
 #include "Util.h"
 #include "MouseEvents.h"
+#include "GameException.h"
 #include <thread>
 #include <chrono>
 
@@ -35,6 +36,40 @@ float GameScreen::getScale(){
 
 void GameScreen::sleep(int ms){
     std::this_thread::sleep_for(std::chrono::milliseconds(ms));
+}
+
+bool GameScreen::waitFor(const Component& c, int timeout_ms, int interval_ms){
+    GameException handler;
+    auto start = std::chrono::steady_clock::now();
+    while (!findComponent(c))
+    {
+        auto now = std::chrono::steady_clock::now();
+        auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(now - start);
+        if (elapsed.count() > timeout_ms)
+        {
+            std::cerr << "Time out while waiting for component " << to_string(c) << "\n";
+            return false;
+        }
+        handler.checkConnectionError();
+        sleep(interval_ms);
+    }
+    return true;
+}
+
+bool GameScreen::waitFor(std::function<bool()> predicate, int timeout_ms, int interval_ms) {
+    GameException handler;
+    auto start = std::chrono::steady_clock::now();
+    while (!predicate()) {
+        auto now = std::chrono::steady_clock::now();
+        auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(now - start);
+        if (elapsed.count() > timeout_ms) {
+            std::cerr << "Time out while waiting for function\n";
+            return false;
+        }
+        handler.checkConnectionError();
+        sleep(interval_ms);
+    }
+    return true;
 }
 
 void GameScreen::click(int x, int y){

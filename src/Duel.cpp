@@ -6,10 +6,10 @@
 #include "Duel.h"
 #include "Util.h"
 
-bool Duel::startDuel(){
+bool Duel::isDueling(){
     GameScreen& screen = GameScreen::getInstance();
-    auto result = screen.clickComponent(this->componentPaths[DUEL_BUTTON], 0.9);
-    return result.found;    
+    auto result = screen.findComponent(DUEL_LOG);
+    return result;
 }
 bool Duel::isPlayerTurn(){
     const std::vector<Component> components = {
@@ -95,6 +95,11 @@ bool Duel::attack(){
 bool Duel::endTurn(){
     GameScreen& screen = GameScreen::getInstance();
     auto result = screen.clickComponent(this->componentPaths[END_TURN_BUTTON], 0.9);
+    return result.found; 
+}
+bool Duel::isOver(){
+    GameScreen& screen = GameScreen::getInstance();
+    auto result = screen.clickComponent(this->componentPaths[OK_BUTTON], 0.9);
     return result.found; 
 }
 

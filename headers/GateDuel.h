@@ -24,7 +24,7 @@ private:
         {LVL_10_BUTTON, "assets/lvl_10_button.png"},
         {REWARDS1X_BUTTON_MINIMIZED, "assets/rewards1x_button_minimized.png"},
         {REWARDS1X_BUTTON, "assets/rewards1x_button.png"},
-        {SELECT3X_BUTTON, "assets/select3x_button.png"}
+        {REWARDS3X_BUTTON, "assets/select3x_button.png"}
     };
 
     bool isAtGate();
@@ -32,6 +32,8 @@ private:
     bool selectLvl10();
     bool isReward_x1();
     bool selectReward_x3();
+    bool startDuel();
+    bool skipDialogue();
 
 public:
     GateDuel();

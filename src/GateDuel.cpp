@@ -6,7 +6,36 @@
 #include "GateDuel.h"
 
 GateDuel::GateDuel(){
-    //this is where the real fight starts
+    GameScreen& screen = GameScreen::getInstance();
+    Duel duel;
+    GameException handler;
+
+    while (!duel.isDueling()) {
+        if (!isAtGate()) {
+            if (!screen.waitFor([&]() { return clickGate(); }, 10000, 200))
+                continue;
+        }
+    
+        if (screen.waitFor([&]() { return isReward_x1(); }, 2000, 500)) {
+            screen.waitFor([&]() { return selectLvl10(); }, 2000, 500);
+            screen.waitFor([&]() { return selectReward_x3(); }, 2000, 500);
+        }
+    
+        screen.waitFor([&]() { return startDuel(); }, 2000, 500);
+        screen.waitFor([&]() { return skipDialogue(); }, 1000, 500);
+        screen.waitFor([&]() { return startDuel(); }, 2000, 500);
+    
+        screen.sleep(5000);
+    }
+
+    while (!duel.isOver())
+    {
+        //duel logic
+    }
+    
+    while(!isAtGate()){
+        //get duel rewards logic
+    }
 }
 
 bool GateDuel::isAtGate(){
@@ -50,5 +79,16 @@ bool GateDuel::isReward_x1(){
 bool GateDuel::selectReward_x3(){
     GameScreen& screen = GameScreen::getInstance();
     auto result = screen.clickComponent(this->componentPaths[REWARDS3X_BUTTON], 0.9);
+    return result.found;
+}
+bool GateDuel::startDuel(){
+    GameScreen& screen = GameScreen::getInstance();
+    auto result = screen.clickComponent(this->componentPaths[DUEL_BUTTON], 0.9);
+    return result.found;    
+}
+
+bool GateDuel::skipDialogue(){
+    GameScreen& screen = GameScreen::getInstance();
+    auto result = screen.clickComponent(this->componentPaths[DIALOGUE_BUTTON], 0.9);
     return result.found;
 }

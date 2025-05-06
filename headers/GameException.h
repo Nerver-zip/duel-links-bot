@@ -9,7 +9,6 @@
 
 class GameException {
 public:
-    GameException(float scale);
     bool checkConnectionError();
     bool checkGameCrash();
     bool checkFatalError();

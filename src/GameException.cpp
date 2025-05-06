@@ -12,6 +12,9 @@ bool GameException::checkConnectionError(){
     GameScreen& screen = GameScreen::getInstance();
     screen.updateScreen();
     auto result = screen.findComponent(CONNECTION_ERROR_SCREEN, 0.9);
+    if(result.found){
+       return handleConnectionError();
+    }
     return result.found;
 }
 

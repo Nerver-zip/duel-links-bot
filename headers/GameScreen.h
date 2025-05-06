@@ -5,6 +5,7 @@
 #include <windows.h>
 #include <iostream>
 #include <unordered_map>
+#include <functional>
 #include "Util.h"
 
 class GameScreen {
@@ -68,6 +69,8 @@ public:
     static GameScreen& getInstance();
 
     void sleep(int ms);
+    bool waitFor(const Component& c, int timeout, int clock);
+    bool GameScreen::waitFor(std::function<bool()> predicate, int timeout_ms, int interval_ms);
     cv::Mat updateScreen();
 
     Resolution getResolution();

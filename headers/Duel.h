@@ -26,7 +26,7 @@ static inline std::unordered_map<Component, std::string> componentPaths = {
     {SELECT_POSITION_BUTTON, "assets/select_position_button.png"}
 };
 public:
-    bool startDuel();
+    bool isDueling();
     bool isPlayerTurn();
     bool isDrawPhase();
     bool draw();
@@ -37,6 +37,7 @@ public:
     bool enterBattlePhase();
     bool attack();
     bool endTurn();
+    bool isOver();
 };
 
 #endif
