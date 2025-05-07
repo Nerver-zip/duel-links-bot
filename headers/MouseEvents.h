@@ -8,6 +8,7 @@
 class MouseEvents {
 public:
     void leftClick(int x, int y);
+    void rightClick(int x, int y);
     void clickButton(const Component& button, float accuracy);
 };
 

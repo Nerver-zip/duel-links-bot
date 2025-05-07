@@ -28,6 +28,7 @@ private:
     };
 
     bool isAtGate();
+    bool foundGateButton();
     bool clickGate();
     bool selectLvl10();
     bool isReward_x1();

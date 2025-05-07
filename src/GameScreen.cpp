@@ -72,6 +72,20 @@ bool GameScreen::waitFor(std::function<bool()> predicate, int timeout_ms, int in
     return true;
 }
 
+bool GameScreen::waitFor_noexcept(std::function<bool()> predicate, int timeout_ms, int interval_ms) {
+    auto start = std::chrono::steady_clock::now();
+    while (!predicate()) {
+        auto now = std::chrono::steady_clock::now();
+        auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(now - start);
+        if (elapsed.count() > timeout_ms) {
+            std::cerr << "Time out while waiting for function\n";
+            return false;
+        }
+        sleep(interval_ms);
+    }
+    return true;
+}
+
 void GameScreen::click(int x, int y){
     MouseEvents mouse;
     mouse.leftClick(x,y);
@@ -129,6 +143,41 @@ MatchResult GameScreen::findComponent(const std::string& path, float accuracy){
     return MatchResult(coordinates);
 }
 
+MatchResult GameScreen::findComponentWithMask(const std::string& path, float accuracy) {
+    Mat component = imread(path, IMREAD_UNCHANGED);
+    if (component.empty() || component.channels() != 4) {
+        std::cerr << "Could not find component with alpha channel" << path << "\n";
+        return MatchResult();
+    }
+
+    if (dimensions != _1920x1080)
+        component = resizeComponent(path);
+
+    std::vector<Mat> channels;
+    split(component, channels);
+
+    Mat mask = channels[3];
+
+    Mat rgbComponent;
+    merge(std::vector<Mat>{channels[0], channels[1], channels[2]}, rgbComponent);
+
+    Mat result;
+    matchTemplate(src, rgbComponent, result, TM_CCORR_NORMED, mask);
+
+    double minVal, maxVal;
+    Point minLoc, maxLoc;
+    minMaxLoc(result, &minVal, &maxVal, &minLoc, &maxLoc);
+
+    std::pair<int, int> coordinates;
+    if (maxVal >= accuracy) {
+        coordinates.first = maxLoc.x + rgbComponent.cols / 2;
+        coordinates.second = maxLoc.y + rgbComponent.rows / 2;
+        return MatchResult(coordinates);
+    } else {
+        return MatchResult();
+    }
+}
+
 Mat GameScreen::updateScreen(){
     screenshot();
     return src;
@@ -137,7 +186,7 @@ Mat GameScreen::updateScreen(){
 //Buttons were mapped in 1920x1080
 //May cause misbehavior the lower the resolution    
 Mat GameScreen::resizeComponent(const std::string& path){
-    Mat original = imread(path);
+    Mat original = imread(path, IMREAD_UNCHANGED);
     
     auto resolution = resolutions[dimensions];
     float width = resolution.first;
@@ -198,3 +247,18 @@ MatchResult GameScreen::clickComponent(const std::string& path, float accuracy){
     return result;
 }
 
+bool GameScreen::clickOkButton(){
+    MouseEvents mouse;
+    auto result = findComponent(componentPaths[OK_BUTTON], 0.9);
+    if (result.found)
+        mouse.leftClick(result.coordinates.first, result.coordinates.second);
+    return result.found;
+}
+
+bool GameScreen::skip(){
+    MouseEvents mouse;
+    auto result = findComponent(componentPaths[LOGO], 0.9);
+    if (result.found)
+        mouse.rightClick(result.coordinates.first, result.coordinates.second);
+    return result.found;
+}

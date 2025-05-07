@@ -32,6 +32,7 @@ enum Component {
     IN_GATE,
     INITIATE_LINK,
     LOAD_BLACK,
+    LOGO,
     LVL_10_BUTTON,
     NEXT_BUTTON,
     NORMAL_SUMMON_BUTTON,

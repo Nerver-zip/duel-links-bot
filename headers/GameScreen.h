@@ -45,6 +45,7 @@ private:
         {GATE_BUTTON, "assets/gate_button.png"},
         {INITIATE_LINK, "assets/initiate_link.png"},
         {LOAD_BLACK, "assets/load_black.png"},
+        {LOGO, "assets/logo.png"},
         {LVL_10_BUTTON, "assets/lvl_10_button.png"},
         {NEXT_BUTTON, "assets/next_button.png"},
         {NORMAL_SUMMON_BUTTON, "assets/normal_summon_button.png"},
@@ -70,20 +71,24 @@ public:
 
     void sleep(int ms);
     bool waitFor(const Component& c, int timeout, int clock);
-    bool GameScreen::waitFor(std::function<bool()> predicate, int timeout_ms, int interval_ms);
+    bool waitFor(std::function<bool()> predicate, int timeout_ms, int interval_ms);
+    bool waitFor_noexcept(std::function<bool()> predicate, int timeout_ms, int interval_ms);
     cv::Mat updateScreen();
 
     Resolution getResolution();
     float getScale();
 
     MatchResult findComponent(const Component& c, float accuracy);
+    MatchResult GameScreen::findComponentWithMask(const std::string& path, float accuracy);
     MatchResult getComponentTopCenterCoordinates(const std::string& path, float accuracy);
     MatchResult findComponent(const std::string& path);
     bool findComponent(const Component& c);
 
     void click(int x, int y);
+    bool clickOkButton();
+    bool skip();
+
     MatchResult clickComponent(const std::string& path, float accuracy);
-    MatchResult clickOkButton();
     MatchResult clickCloseButton();
     MatchResult clickConfirmButton();
     MatchResult clickRetryButton();

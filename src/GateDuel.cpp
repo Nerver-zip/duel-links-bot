@@ -8,7 +8,6 @@
 GateDuel::GateDuel(){
     GameScreen& screen = GameScreen::getInstance();
     Duel duel;
-    GameException handler;
 
     while (!duel.isDueling()) {
         if (!isAtGate()) {
@@ -30,11 +29,25 @@ GateDuel::GateDuel(){
 
     while (!duel.isOver())
     {
-        //duel logic
+        if (!duel.isPlayerTurn()) {
+            continue;
+        }
+
+        screen.waitFor_noexcept([&]() { return duel.draw();}, 20000, 500);
+        screen.waitFor_noexcept([&]() { return duel.selectMonster();}, 20000, 500);
+        screen.waitFor_noexcept([&]() { return duel.normalSummon();}, 1000, 200);
+        screen.waitFor_noexcept([&]() { return duel.selectPosition();}, 1000, 200);
+        screen.waitFor_noexcept([&]() { return duel.selectPhase();}, 1000, 200);
+        screen.waitFor_noexcept([&]() { return duel.enterBattlePhase();}, 1000, 200);
+        screen.waitFor_noexcept([&]() { return duel.attack();}, 1000, 200);
+        screen.waitFor_noexcept([&]() { return duel.selectPhase();}, 1000, 200);
+        screen.waitFor_noexcept([&]() { return duel.endTurn();}, 1000, 200);
+
+        screen.sleep(5000);
     }
-    
-    while(!isAtGate()){
-        //get duel rewards logic
+    screen.waitFor([&]() {return screen.clickOkButton();}, 1000, 500);
+    while(!isAtGate() || !foundGateButton()){
+        screen.waitFor([&]() {return screen.skip();}, 1000, 500);
     }
 }
 
@@ -42,6 +55,26 @@ bool GateDuel::isAtGate(){
     GameScreen& screen = GameScreen::getInstance();
     auto result = screen.findComponent(this->componentPaths[IN_GATE]);
     return result.found;
+}
+bool GateDuel::foundGateButton(){
+    const std::vector<Component> buttons = {
+        GATE_BUTTON,
+        GATE_BUTTON_MINIMIZED,
+        GATE_BUTTON_RED,
+        GATE_BUTTON_RED_MINIMIZED,
+        GATE_BUTTON_SELECTED,
+        GATE_BUTTON_SELECTED_MINIMIZED,
+        GATE_BUTTON_STREET,
+        GATE_BUTTON_STREET_MINIMIZED
+    };
+    GameScreen& screen = GameScreen::getInstance();
+    for (const auto& button : buttons)
+    {
+        auto result = screen.findComponent(this->componentPaths[button]);
+        if(result.found)
+            return true;
+    }
+    return false;
 }
 bool GateDuel::clickGate(){
     const std::vector<Component> buttons = {
