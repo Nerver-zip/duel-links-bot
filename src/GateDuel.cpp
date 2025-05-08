@@ -5,7 +5,7 @@
 #include "Duel.h"
 #include "GateDuel.h"
 
-GateDuel::GateDuel(){
+void GateDuel::run(){
     GameScreen& screen = GameScreen::getInstance();
     Duel duel;
 
@@ -39,6 +39,11 @@ GateDuel::GateDuel(){
         screen.waitFor_noexcept([&]() { return duel.selectPosition();}, 1000, 200);
         screen.waitFor_noexcept([&]() { return duel.selectPhase();}, 1000, 200);
         screen.waitFor_noexcept([&]() { return duel.enterBattlePhase();}, 1000, 200);
+        screen.waitFor_noexcept([&]() { return duel.selectMonsterToAttack();}, 1000, 200);
+        screen.waitFor_noexcept([&]() { return duel.attack();}, 1000, 200);
+        screen.waitFor_noexcept([&]() { return duel.selectMonsterToAttack();}, 1000, 100);
+        screen.waitFor_noexcept([&]() { return duel.attack();}, 1000, 200);
+        screen.waitFor_noexcept([&]() { return duel.selectMonsterToAttack();}, 1000, 100);
         screen.waitFor_noexcept([&]() { return duel.attack();}, 1000, 200);
         screen.waitFor_noexcept([&]() { return duel.selectPhase();}, 1000, 200);
         screen.waitFor_noexcept([&]() { return duel.endTurn();}, 1000, 200);
@@ -53,8 +58,8 @@ GateDuel::GateDuel(){
 
 bool GateDuel::isAtGate(){
     GameScreen& screen = GameScreen::getInstance();
-    auto result = screen.findComponent(this->componentPaths[IN_GATE]);
-    return result.found;
+    auto result = screen.findComponent(IN_GATE);
+    return result;
 }
 bool GateDuel::foundGateButton(){
     const std::vector<Component> buttons = {
@@ -70,8 +75,8 @@ bool GateDuel::foundGateButton(){
     GameScreen& screen = GameScreen::getInstance();
     for (const auto& button : buttons)
     {
-        auto result = screen.findComponent(this->componentPaths[button]);
-        if(result.found)
+        auto result = screen.findComponent(button);
+        if(result)
             return true;
     }
     return false;
@@ -90,7 +95,7 @@ bool GateDuel::clickGate(){
     GameScreen& screen = GameScreen::getInstance();
     for (const auto& button : buttons)
     {
-        auto result = screen.clickComponent(this->componentPaths[button], 0.9);
+        auto result = screen.clickComponent(button, 0.9);
         if(result.found)
             return true;
     }
@@ -98,7 +103,7 @@ bool GateDuel::clickGate(){
 }
 bool GateDuel::selectLvl10(){
     GameScreen& screen = GameScreen::getInstance();
-    auto result = screen.clickComponent(this->componentPaths[LVL_10_BUTTON], 0.9);
+    auto result = screen.clickComponent(LVL_10_BUTTON, 0.9);
     return result.found;
 }
 bool GateDuel::isReward_x1(){
@@ -106,22 +111,22 @@ bool GateDuel::isReward_x1(){
         REWARDS1X_BUTTON, REWARDS1X_BUTTON_MINIMIZED
     };
     GameScreen& screen = GameScreen::getInstance();
-    auto result = screen.clickComponent(this->componentPaths[REWARDS1X_BUTTON], 0.9);
+    auto result = screen.clickComponent(REWARDS1X_BUTTON, 0.9);
     return result.found;
 }
 bool GateDuel::selectReward_x3(){
     GameScreen& screen = GameScreen::getInstance();
-    auto result = screen.clickComponent(this->componentPaths[REWARDS3X_BUTTON], 0.9);
+    auto result = screen.clickComponent(REWARDS3X_BUTTON, 0.9);
     return result.found;
 }
 bool GateDuel::startDuel(){
     GameScreen& screen = GameScreen::getInstance();
-    auto result = screen.clickComponent(this->componentPaths[DUEL_BUTTON], 0.9);
+    auto result = screen.clickComponent(DUEL_BUTTON, 0.9);
     return result.found;    
 }
 
 bool GateDuel::skipDialogue(){
     GameScreen& screen = GameScreen::getInstance();
-    auto result = screen.clickComponent(this->componentPaths[DIALOGUE_BUTTON], 0.9);
+    auto result = screen.clickComponent(DIALOGUE_BUTTON, 0.9);
     return result.found;
 }

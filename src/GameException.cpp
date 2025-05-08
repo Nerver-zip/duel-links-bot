@@ -18,10 +18,18 @@ bool GameException::checkConnectionError(){
     return result.found;
 }
 
+bool GameException::checkGameCrash(){
+    return false;
+}
+bool GameException::checkFatalError(){
+    return false;
+}
+
 bool GameException::handleConnectionError(){
     GameScreen& screen = GameScreen::getInstance();
     bool exception = true;
     int count = 0;
+    MatchResult solved;
     while (exception)
     {   
         screen.clickRetryButton();
@@ -31,6 +39,7 @@ bool GameException::handleConnectionError(){
         if (count == 100)
             throw std::runtime_error("Connection failed.\n");
     }
+    return exception;
 }
 
 bool GameException::handleGameCrash(){

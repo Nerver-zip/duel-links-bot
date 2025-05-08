@@ -27,12 +27,12 @@ bool Duel::isPlayerTurn(){
 }
 bool Duel::isDrawPhase(){
     GameScreen& screen = GameScreen::getInstance();
-    auto result = screen.findComponent(this->componentPaths[PLAYER_DRAW]);
-    return result.found; 
+    auto result = screen.findComponent(PLAYER_DRAW);
+    return result; 
 }
 bool Duel::draw(){
     GameScreen& screen = GameScreen::getInstance();
-    auto result = screen.clickComponent(this->componentPaths[PLAYER_DRAW], 0.9);
+    auto result = screen.clickComponent(PLAYER_DRAW, 0.9);
     return result.found; 
 }
 bool Duel::selectMonster(){
@@ -43,7 +43,7 @@ bool Duel::selectMonster(){
     MatchResult result;
     for (const auto& component : components)
     {
-        result = screen.getComponentTopCenterCoordinates(this->componentPaths[DUEL_LOG], 0.9);
+        result = screen.getComponentTopCenterCoordinates(DUEL_LOG, 0.9);
         if (result.found)
             break;
         if (!result.found)
@@ -69,37 +69,55 @@ bool Duel::selectMonster(){
 }
 bool Duel::normalSummon(){
     GameScreen& screen = GameScreen::getInstance();
-    auto result = screen.clickComponent(this->componentPaths[NORMAL_SUMMON_BUTTON], 0.9);
+    auto result = screen.clickComponent(NORMAL_SUMMON_BUTTON, 0.9);
     return result.found; 
 }
 bool Duel::selectPosition(){
     GameScreen& screen = GameScreen::getInstance();
-    auto result = screen.clickComponent(this->componentPaths[SELECT_POSITION_BUTTON], 0.9);
+    auto result = screen.clickComponent(SELECT_POSITION_BUTTON, 0.9);
     return result.found; 
 }
 bool Duel::selectPhase(){
     GameScreen& screen = GameScreen::getInstance();
-    auto result = screen.clickComponent(this->componentPaths[SELECT_PHASE_BUTTON], 0.9);
+    auto result = screen.clickComponent(SELECT_PHASE_BUTTON, 0.9);
     return result.found; 
 }
 bool Duel::enterBattlePhase(){
     GameScreen& screen = GameScreen::getInstance();
-    auto result = screen.clickComponent(this->componentPaths[BATTLE_BUTTON], 0.9);
+    auto result = screen.clickComponent(BATTLE_BUTTON, 0.9);
     return result.found; 
+}
+bool Duel::selectMonsterToAttack(){
+    GameScreen& screen = GameScreen::getInstance();
+    auto result = screen.clickComponent_withMask(HIGHLIGHTED_MONSTER, 0.9);
+    return result.found;
 }
 bool Duel::attack(){
     GameScreen& screen = GameScreen::getInstance();
-    auto result = screen.clickComponent(this->componentPaths[ATTACK_BUTTON], 0.9);
+    auto result = screen.clickComponent(ATTACK_BUTTON, 0.9);
     return result.found; 
+}
+bool Duel::selectOpponentMonsterToAttack(){
+    GameScreen& screen = GameScreen::getInstance();
+    auto result = screen.clickComponent_withMask(OPPONENT_MONSTER_SELECT, 0.9);
+    bool finalRes = false;
+    if (result.found)
+        finalRes = clickConfirmButton();
+    return finalRes;
+}
+bool Duel::clickConfirmButton(){
+    GameScreen& screen = GameScreen::getInstance();
+    auto result = screen.clickComponent(CONFIRM_BUTTON_BLUE, 0.9);
+    return result.found;
 }
 bool Duel::endTurn(){
     GameScreen& screen = GameScreen::getInstance();
-    auto result = screen.clickComponent(this->componentPaths[END_TURN_BUTTON], 0.9);
+    auto result = screen.clickComponent(END_TURN_BUTTON, 0.9);
     return result.found; 
 }
 bool Duel::isOver(){
     GameScreen& screen = GameScreen::getInstance();
-    auto result = screen.clickComponent(this->componentPaths[OK_BUTTON], 0.9);
+    auto result = screen.clickComponent(OK_BUTTON, 0.9);
     return result.found; 
 }
 

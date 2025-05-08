@@ -12,8 +12,10 @@ enum Component {
     ATTACK_BUTTON,
     BATTLE_BUTTON,
     CLOSE_BUTTON,
+    CONFIRM_BUTTON_BLUE,
     CONFIRM_BUTTON_RED,
     CONNECTION_ERROR_SCREEN,
+    CROPPED_OPONNENT_MONSTER,
     DIALOGUE_BUTTON,
     DUEL_BUTTON,
     DUEL_LOG,
@@ -29,6 +31,7 @@ enum Component {
     GATE_BUTTON_SELECTED_MINIMIZED,
     GATE_BUTTON_STREET,
     GATE_BUTTON_STREET_MINIMIZED,
+    HIGHLIGHTED_MONSTER,
     IN_GATE,
     INITIATE_LINK,
     LOAD_BLACK,
@@ -50,7 +53,7 @@ enum Component {
     SELECT_POSITION_BUTTON,
 };
 
-std::string to_string(Component c) {
+inline std::string to_string(Component c) {
     switch (c) {
         case ARROW_BACK_BUTTON:               return "ARROW_BACK_BUTTON";
         case ATTACK_BUTTON:                   return "ATTACK_BUTTON";

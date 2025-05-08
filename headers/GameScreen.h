@@ -25,37 +25,48 @@ private:
     };
 
     static inline std::unordered_map<Component, std::string> componentPaths = {
-        {ARROW_BACK_BUTTON, "assets/arrow_back_button.png"},
-        {ATTACK_BUTTON, "assets/attack_button.png"},
-        {BATTLE_BUTTON, "assets/battle_button.png"},
-        {CLOSE_BUTTON, "assets/close_button.png"},
-        {CONFIRM_BUTTON_RED, "assets/confirm_button_red.png"},
-        {CONNECTION_ERROR_SCREEN, "assets/connection_error_screen.png"},
-        {DIALOGUE_BUTTON, "assets/dialogue_button.png"},
-        {DUEL_BUTTON, "assets/duel_button.png"},
-        {END_TURN_BUTTON, "assets/end_turn_button.png"},
-        {ERROR_SCREEN, "assets/error_screen.png"},
-        {GATE_BUTTON_MINIMIZED, "assets/gate_button_minimized.png"},
-        {GATE_BUTTON_RED_MINIMIZED, "assets/gate_button_red_minimized.png"},
-        {GATE_BUTTON_RED, "assets/gate_button_red.png"},
-        {GATE_BUTTON_SELECTED_MINIMIZED, "assets/gate_button_selected_minimized.png"},
-        {GATE_BUTTON_SELECTED, "assets/gate_button_selected.png"},
-        {GATE_BUTTON_STREET_MINIMIZED, "assets/gate_button_street_minimized.png"},
-        {GATE_BUTTON_STREET, "assets/gate_button_street.png"},
-        {GATE_BUTTON, "assets/gate_button.png"},
-        {INITIATE_LINK, "assets/initiate_link.png"},
-        {LOAD_BLACK, "assets/load_black.png"},
-        {LOGO, "assets/logo.png"},
-        {LVL_10_BUTTON, "assets/lvl_10_button.png"},
-        {NEXT_BUTTON, "assets/next_button.png"},
-        {NORMAL_SUMMON_BUTTON, "assets/normal_summon_button.png"},
-        {OK_BUTTON, "assets/ok_button.png"},
-        {RETRY_BUTTON, "assets/retry_button.png"},
-        {REWARDS1X_BUTTON_MINIMIZED, "assets/rewards1x_button_minimized.png"},
-        {REWARDS1X_BUTTON, "assets/rewards1x_button.png"},
-        {SELECT_PHASE_BUTTON, "assets/select_phase_button.png"},
-        {SELECT_POSITION_BUTTON, "assets/select_position_button.png"},
-        {REWARDS3X_BUTTON, "assets/select3x_button.png"}
+        {ARROW_BACK_BUTTON, "../assets/arrow_back_button.png"},
+        {ATTACK_BUTTON, "../assets/attack_button.png"},
+        {BATTLE_BUTTON, "../assets/battle_button.png"},
+        {CLOSE_BUTTON, "../assets/close_button.png"},
+        {CONFIRM_BUTTON_BLUE, "../assets/confirm_button_blue.png"},
+        {CONFIRM_BUTTON_RED, "../assets/confirm_button_red.png"},
+        {CONNECTION_ERROR_SCREEN, "../assets/connection_error_screen.png"},
+        {DIALOGUE_BUTTON, "../assets/dialogue_button.png"},
+        {DUEL_BUTTON, "../assets/duel_button.png"},
+        {DUEL_LOG, "../assets/duel_log.png"},
+        {DUEL_LOG_HALF, "../assets/duel_log_half.png"},
+        {DURING_BATTLE_PHASE, "../assets/during_battle_phase.png"},
+        {END_TURN_BUTTON, "../assets/end_turn_button.png"},
+        {ERROR_SCREEN, "../assets/error_screen.png"},
+        {GATE_BUTTON, "../assets/gate_button.png"},
+        {GATE_BUTTON_MINIMIZED, "../assets/gate_button_minimized.png"},
+        {GATE_BUTTON_RED, "../assets/gate_button_red.png"},
+        {GATE_BUTTON_RED_MINIMIZED, "../assets/gate_button_red_minimized.png"},
+        {GATE_BUTTON_SELECTED, "../assets/gate_button_selected.png"},
+        {GATE_BUTTON_SELECTED_MINIMIZED, "../assets/gate_button_selected_minimized.png"},
+        {GATE_BUTTON_STREET, "../assets/gate_button_street.png"},
+        {GATE_BUTTON_STREET_MINIMIZED, "../assets/gate_button_street_minimized.png"},
+        {HIGHLIGHTED_MONSTER, "../assets/highlighted_monster.png"},
+        {IN_GATE, "../assets/in_gate.png"},
+        {INITIATE_LINK, "../assets/initiate_link.png"},
+        {LOAD_BLACK, "../assets/load_black.png"},
+        {LOGO, "../assets/logo.png"},
+        {LVL_10_BUTTON, "../assets/lvl_10_button.png"},
+        {NEXT_BUTTON, "../assets/next_button.png"},
+        {NORMAL_SUMMON_BUTTON, "../assets/normal_summon_button.png"},
+        {OK_BUTTON, "../assets/ok_button.png"},
+        {OPPONENT_MONSTER_SELECT, "../assets/opponent_monster_select.png"},
+        {OPPONENT_TURN, "../assets/opponent_turn.png"},
+        {PLAYER_DRAW, "../assets/player_draw.png"},
+        {PLAYER_TURN, "../assets/player_turn.png"},
+        {PLAYER_TURN_MP, "../assets/player_turn_mp.png"},
+        {RETRY_BUTTON, "../assets/retry_button.png"},
+        {REWARDS1X_BUTTON, "../assets/rewards1x_button.png"},
+        {REWARDS1X_BUTTON_MINIMIZED, "../assets/rewards1x_button_minimized.png"},
+        {REWARDS3X_BUTTON, "../assets/select3x_button.png"},
+        {SELECT_PHASE_BUTTON, "../assets/select_phase_button.png"},
+        {SELECT_POSITION_BUTTON, "../assets/select_position_button.png"}
     };
 
     void screenshot();
@@ -79,16 +90,16 @@ public:
     float getScale();
 
     MatchResult findComponent(const Component& c, float accuracy);
-    MatchResult GameScreen::findComponentWithMask(const std::string& path, float accuracy);
-    MatchResult getComponentTopCenterCoordinates(const std::string& path, float accuracy);
-    MatchResult findComponent(const std::string& path);
+    MatchResult findComponentWithMask(const std::string& path, float accuracy);
+    MatchResult getComponentTopCenterCoordinates(const Component& c, float accuracy);
     bool findComponent(const Component& c);
 
     void click(int x, int y);
     bool clickOkButton();
     bool skip();
 
-    MatchResult clickComponent(const std::string& path, float accuracy);
+    MatchResult clickComponent(const Component& c, float accuracy);
+    MatchResult clickComponent_withMask(const Component& c, float accuracy);
     MatchResult clickCloseButton();
     MatchResult clickConfirmButton();
     MatchResult clickRetryButton();

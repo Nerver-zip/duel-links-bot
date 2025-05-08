@@ -117,8 +117,8 @@ void GameScreen::screenshot() {
     
     this->src = src;
 }
-
 MatchResult GameScreen::findComponent(const std::string& path, float accuracy){
+    src = updateScreen();
     Mat component = imread(path);
     if (component.empty()) {
         std::cerr << "Could not find component." << "\n";
@@ -144,6 +144,7 @@ MatchResult GameScreen::findComponent(const std::string& path, float accuracy){
 }
 
 MatchResult GameScreen::findComponentWithMask(const std::string& path, float accuracy) {
+    src = updateScreen();
     Mat component = imread(path, IMREAD_UNCHANGED);
     if (component.empty() || component.channels() != 4) {
         std::cerr << "Could not find component with alpha channel" << path << "\n";
@@ -210,11 +211,8 @@ bool GameScreen::findComponent(const Component& c){
     return result.found;
 }
 
-MatchResult GameScreen::findComponent(const std::string& path){
-    return findComponent(path, 0.9);
-}
-
-MatchResult GameScreen::getComponentTopCenterCoordinates(const std::string& path, float accuracy){
+MatchResult GameScreen::getComponentTopCenterCoordinates(const Component& c, float accuracy){
+    auto path = componentPaths[c];
     Mat component = imread(path);
     if (component.empty()) {
         std::cerr << "Could not find component." << "\n";
@@ -239,9 +237,17 @@ MatchResult GameScreen::getComponentTopCenterCoordinates(const std::string& path
     return MatchResult(coordinates);
 }
 
-MatchResult GameScreen::clickComponent(const std::string& path, float accuracy){
+MatchResult GameScreen::clickComponent(const Component& c, float accuracy){
     MouseEvents mouse;
-    auto result = findComponent(path, accuracy);
+    auto result = findComponent(componentPaths[c], accuracy);
+    if (result.found)
+        mouse.leftClick(result.coordinates.first, result.coordinates.second);
+    return result;
+}
+
+MatchResult GameScreen::clickComponent_withMask(const Component& c, float accuracy){
+    MouseEvents mouse;
+    auto result = findComponentWithMask(componentPaths[c], accuracy);
     if (result.found)
         mouse.leftClick(result.coordinates.first, result.coordinates.second);
     return result;
@@ -253,6 +259,10 @@ bool GameScreen::clickOkButton(){
     if (result.found)
         mouse.leftClick(result.coordinates.first, result.coordinates.second);
     return result.found;
+}
+
+MatchResult GameScreen::clickRetryButton(){
+    return clickComponent(RETRY_BUTTON, 0.9);
 }
 
 bool GameScreen::skip(){

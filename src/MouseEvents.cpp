@@ -28,7 +28,7 @@ void MouseEvents::leftClick(int x, int y) {
     UINT sent = SendInput(2, inputs, sizeof(INPUT));
 }
 
-void rightClick(int x, int y){
+void MouseEvents::rightClick(int x, int y){
     GameScreen& screen = GameScreen::getInstance();
     
     
