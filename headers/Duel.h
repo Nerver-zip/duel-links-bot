@@ -11,6 +11,9 @@ public:
     bool isDueling();
     bool isPlayerTurn();
     bool isDrawPhase();
+    bool isBattlePhase();
+    bool isBoardCleared();
+    bool isPlayerTurnOne();
     bool draw();
     bool selectMonster();
     bool normalSummon();

@@ -40,6 +40,7 @@ enum Component {
     NEXT_BUTTON,
     NORMAL_SUMMON_BUTTON,
     OK_BUTTON,
+    OPPONENT_FRONTROW,
     OPPONENT_MONSTER_SELECT,
     OPPONENT_TURN,
     PLAYER_DRAW,
@@ -51,6 +52,7 @@ enum Component {
     REWARDS3X_BUTTON,
     SELECT_PHASE_BUTTON,
     SELECT_POSITION_BUTTON,
+    TURN_ONE
 };
 
 inline std::string to_string(Component c) {
@@ -59,8 +61,10 @@ inline std::string to_string(Component c) {
         case ATTACK_BUTTON:                   return "ATTACK_BUTTON";
         case BATTLE_BUTTON:                   return "BATTLE_BUTTON";
         case CLOSE_BUTTON:                    return "CLOSE_BUTTON";
+        case CONFIRM_BUTTON_BLUE:             return "CONFIRM_BUTTON_BLUE";
         case CONFIRM_BUTTON_RED:              return "CONFIRM_BUTTON_RED";
         case CONNECTION_ERROR_SCREEN:         return "CONNECTION_ERROR_SCREEN";
+        case CROPPED_OPONNENT_MONSTER:        return "CROPPED_OPONNENT_MONSTER";
         case DIALOGUE_BUTTON:                 return "DIALOGUE_BUTTON";
         case DUEL_BUTTON:                     return "DUEL_BUTTON";
         case DUEL_LOG:                        return "DUEL_LOG";
@@ -76,13 +80,16 @@ inline std::string to_string(Component c) {
         case GATE_BUTTON_SELECTED_MINIMIZED:  return "GATE_BUTTON_SELECTED_MINIMIZED";
         case GATE_BUTTON_STREET:              return "GATE_BUTTON_STREET";
         case GATE_BUTTON_STREET_MINIMIZED:    return "GATE_BUTTON_STREET_MINIMIZED";
+        case HIGHLIGHTED_MONSTER:             return "HIGHLIGHTED_MONSTER";
         case IN_GATE:                         return "IN_GATE";
         case INITIATE_LINK:                   return "INITIATE_LINK";
         case LOAD_BLACK:                      return "LOAD_BLACK";
+        case LOGO:                            return "LOGO";
         case LVL_10_BUTTON:                   return "LVL_10_BUTTON";
         case NEXT_BUTTON:                     return "NEXT_BUTTON";
         case NORMAL_SUMMON_BUTTON:            return "NORMAL_SUMMON_BUTTON";
         case OK_BUTTON:                       return "OK_BUTTON";
+        case OPPONENT_FRONTROW:               return "OPPONENT_FRONTROW";
         case OPPONENT_MONSTER_SELECT:         return "OPPONENT_MONSTER_SELECT";
         case OPPONENT_TURN:                   return "OPPONENT_TURN";
         case PLAYER_DRAW:                     return "PLAYER_DRAW";
@@ -94,6 +101,7 @@ inline std::string to_string(Component c) {
         case REWARDS3X_BUTTON:                return "REWARDS3X_BUTTON";
         case SELECT_PHASE_BUTTON:             return "SELECT_PHASE_BUTTON";
         case SELECT_POSITION_BUTTON:          return "SELECT_POSITION_BUTTON";
+        case TURN_ONE:                        return "TURN ONE";
         default:                              return "UNKNOWN_COMPONENT";
     }
 }

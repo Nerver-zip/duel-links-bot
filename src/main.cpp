@@ -12,6 +12,5 @@ int main() {
     {
         duel.run();
     }
-
     return 0;
 }

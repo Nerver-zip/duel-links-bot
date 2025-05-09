@@ -56,6 +56,7 @@ private:
         {NEXT_BUTTON, "../assets/next_button.png"},
         {NORMAL_SUMMON_BUTTON, "../assets/normal_summon_button.png"},
         {OK_BUTTON, "../assets/ok_button.png"},
+        {OPPONENT_FRONTROW, "../assets/opponent_frontrow.png"},
         {OPPONENT_MONSTER_SELECT, "../assets/opponent_monster_select.png"},
         {OPPONENT_TURN, "../assets/opponent_turn.png"},
         {PLAYER_DRAW, "../assets/player_draw.png"},
@@ -66,7 +67,8 @@ private:
         {REWARDS1X_BUTTON_MINIMIZED, "../assets/rewards1x_button_minimized.png"},
         {REWARDS3X_BUTTON, "../assets/select3x_button.png"},
         {SELECT_PHASE_BUTTON, "../assets/select_phase_button.png"},
-        {SELECT_POSITION_BUTTON, "../assets/select_position_button.png"}
+        {SELECT_POSITION_BUTTON, "../assets/select_position_button.png"},
+        {TURN_ONE, "../assets/turn_one.png"}
     };
 
     void screenshot();
@@ -81,9 +83,8 @@ public:
     static GameScreen& getInstance();
 
     void sleep(int ms);
-    bool waitFor(const Component& c, int timeout, int clock);
-    bool waitFor(std::function<bool()> predicate, int timeout_ms, int interval_ms);
-    bool waitFor_noexcept(std::function<bool()> predicate, int timeout_ms, int interval_ms);
+    bool waitFor(const Component& c, std::function<bool()> predicate, int timeout_ms, int interval_ms);
+    bool waitFor_noexcept(const Component& c, std::function<bool()> predicate, int timeout_ms, int interval_ms);
     cv::Mat updateScreen();
 
     Resolution getResolution();

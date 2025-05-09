@@ -30,9 +30,24 @@ bool Duel::isDrawPhase(){
     auto result = screen.findComponent(PLAYER_DRAW);
     return result; 
 }
+bool Duel::isBattlePhase(){
+    GameScreen& screen = GameScreen::getInstance();
+    auto result = screen.findComponent(DURING_BATTLE_PHASE);
+    return result;
+}
+bool Duel::isBoardCleared(){
+    GameScreen& screen = GameScreen::getInstance();
+    auto result = screen.findComponent(OPPONENT_FRONTROW);
+    return result;
+}
+bool Duel::isPlayerTurnOne(){
+    GameScreen& screen = GameScreen::getInstance();
+    auto result = screen.findComponent(TURN_ONE);
+    return result;
+}
 bool Duel::draw(){
     GameScreen& screen = GameScreen::getInstance();
-    auto result = screen.clickComponent(PLAYER_DRAW, 0.9);
+    auto result = screen.clickComponent(PLAYER_DRAW, 0.80);
     return result.found; 
 }
 bool Duel::selectMonster(){
