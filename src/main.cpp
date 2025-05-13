@@ -5,8 +5,8 @@
 #include "GateDuel.h"
 
 int main() {
-
-    GameScreen& screen = GameScreen::init(_1920x1080, 1.25f);
+    //while GUI is not ready...
+    GameScreen& screen = GameScreen::init(_1280x720, 1.25f); //resolution, zoom
     GateDuel duel;
     while (1)
     {

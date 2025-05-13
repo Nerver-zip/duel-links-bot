@@ -99,50 +99,75 @@ void GameScreen::screenshot() {
     
     this->src = src;
 }
-MatchResult GameScreen::findComponent(const std::string& path, float accuracy){
+MatchResult GameScreen::findComponent(const std::string& path, float accuracy) {
     src = updateScreen();
     Mat component = imread(path);
     if (component.empty()) {
-        std::cerr << "Could not find component." << "\n";
+        std::cerr << "Could not find component: " << path << "\n";
         return MatchResult();
     }
 
     if (dimensions != _1920x1080)
-        component = resizeComponent(path);
-    
+        component = resizeComponent(component); 
+
+    if (component.empty()) {
+        std::cerr << "Component is empty after resizing: " << path << "\n";
+        return MatchResult();
+    }
+
+    if (src.empty() || component.empty()) {
+        std::cerr << "One or more mats are empty before matchTemplate." << std::endl;
+        return MatchResult();
+    }
+
     Mat result;
     matchTemplate(src, component, result, TM_CCOEFF_NORMED);
+
     double minVal, maxVal;
     Point minLoc, maxLoc;
     minMaxLoc(result, &minVal, &maxVal, &minLoc, &maxLoc);
-    std::pair<int,int> coordinates;
+
     if (maxVal >= accuracy) {
-        coordinates.first = maxLoc.x + component.cols / 2;
-        coordinates.second = maxLoc.y + component.rows / 2;
-    } else {
-        return MatchResult();
+        std::pair<int, int> coordinates = {
+            maxLoc.x + component.cols / 2,
+            maxLoc.y + component.rows / 2
+        };
+        return MatchResult(coordinates);
     }
-    return MatchResult(coordinates);
+    return MatchResult();
 }
 
 MatchResult GameScreen::findComponentWithMask(const std::string& path, float accuracy) {
     src = updateScreen();
     Mat component = imread(path, IMREAD_UNCHANGED);
     if (component.empty() || component.channels() != 4) {
-        std::cerr << "Could not find component with alpha channel" << path << "\n";
+        std::cerr << "Could not find component with alpha channel: " << path << "\n";
         return MatchResult();
     }
 
     if (dimensions != _1920x1080)
-        component = resizeComponent(path);
+        component = resizeComponent(component);  // Agora usando o Mat, não o path!
+
+    if (component.empty()) {
+        std::cerr << "Component is empty after resizing: " << path << "\n";
+        return MatchResult();
+    }
+
+    if (component.channels() != 4) {
+        std::cerr << "Component lost alpha channel after resizing: " << path << "\n";
+        return MatchResult();
+    }
 
     std::vector<Mat> channels;
     split(component, channels);
-
     Mat mask = channels[3];
-
     Mat rgbComponent;
     merge(std::vector<Mat>{channels[0], channels[1], channels[2]}, rgbComponent);
+
+    if (src.empty() || rgbComponent.empty() || mask.empty()) {
+        std::cerr << "One or more mats are empty before matchTemplate." << std::endl;
+        return MatchResult();
+    }
 
     Mat result;
     matchTemplate(src, rgbComponent, result, TM_CCORR_NORMED, mask);
@@ -151,14 +176,64 @@ MatchResult GameScreen::findComponentWithMask(const std::string& path, float acc
     Point minLoc, maxLoc;
     minMaxLoc(result, &minVal, &maxVal, &minLoc, &maxLoc);
 
-    std::pair<int, int> coordinates;
     if (maxVal >= accuracy) {
-        coordinates.first = maxLoc.x + rgbComponent.cols / 2;
-        coordinates.second = maxLoc.y + rgbComponent.rows / 2;
+        std::pair<int, int> coordinates = {
+            maxLoc.x + rgbComponent.cols / 2,
+            maxLoc.y + rgbComponent.rows / 2
+        };
         return MatchResult(coordinates);
-    } else {
+    }
+    return MatchResult();
+}
+
+MatchResult GameScreen::findComponentWithMask(const Component& c, float accuracy){
+        src = updateScreen();
+    auto path = componentPaths[c];
+    Mat component = imread(path, IMREAD_UNCHANGED);
+    if (component.empty() || component.channels() != 4) {
+        std::cerr << "Could not find component with alpha channel: " << path << "\n";
         return MatchResult();
     }
+
+    if (dimensions != _1920x1080)
+        component = resizeComponent(component);  // Agora usando o Mat, não o path!
+
+    if (component.empty()) {
+        std::cerr << "Component is empty after resizing: " << path << "\n";
+        return MatchResult();
+    }
+
+    if (component.channels() != 4) {
+        std::cerr << "Component lost alpha channel after resizing: " << path << "\n";
+        return MatchResult();
+    }
+
+    std::vector<Mat> channels;
+    split(component, channels);
+    Mat mask = channels[3];
+    Mat rgbComponent;
+    merge(std::vector<Mat>{channels[0], channels[1], channels[2]}, rgbComponent);
+
+    if (src.empty() || rgbComponent.empty() || mask.empty()) {
+        std::cerr << "One or more mats are empty before matchTemplate." << std::endl;
+        return MatchResult();
+    }
+
+    Mat result;
+    matchTemplate(src, rgbComponent, result, TM_CCORR_NORMED, mask);
+
+    double minVal, maxVal;
+    Point minLoc, maxLoc;
+    minMaxLoc(result, &minVal, &maxVal, &minLoc, &maxLoc);
+
+    if (maxVal >= accuracy) {
+        std::pair<int, int> coordinates = {
+            maxLoc.x + rgbComponent.cols / 2,
+            maxLoc.y + rgbComponent.rows / 2
+        };
+        return MatchResult(coordinates);
+    }
+    return MatchResult();
 }
 
 Mat GameScreen::updateScreen(){
@@ -168,16 +243,16 @@ Mat GameScreen::updateScreen(){
 
 //Buttons were mapped in 1920x1080
 //May cause misbehavior the lower the resolution    
-Mat GameScreen::resizeComponent(const std::string& path){
-    Mat original = imread(path, IMREAD_UNCHANGED);
-    
-    auto resolution = resolutions[dimensions];
-    float width = resolution.first;
-    float height = resolution.second;
+Mat GameScreen::resizeComponent(const Mat& original) {
+    if (original.empty()) {
+        std::cerr << "Original image is empty in resizeComponent(Mat)" << std::endl;
+        return Mat();
+    }
 
-    float ratioX = static_cast<float>(width) / 1920.0;
-    float ratioY = static_cast<float>(height) / 1080.0;
-    float ratio = min(ratioX, ratioY); 
+    auto resolution = resolutions[dimensions];
+    float ratioX = resolution.first / 1920.0f;
+    float ratioY = resolution.second / 1080.0f;
+    float ratio = std::min(ratioX, ratioY);
 
     Mat resized;
     resize(original, resized, Size(), ratio, ratio, INTER_LINEAR);
@@ -202,7 +277,7 @@ MatchResult GameScreen::getComponentTopCenterCoordinates(const Component& c, flo
     }
 
     if (dimensions != _1920x1080)
-        component = resizeComponent(path);
+        component = resizeComponent(component);
     
     Mat result;
     matchTemplate(src, component, result, TM_CCOEFF_NORMED);

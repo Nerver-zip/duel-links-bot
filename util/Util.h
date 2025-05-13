@@ -11,6 +11,14 @@ enum Component {
     ARROW_BACK_BUTTON,
     ATTACK_BUTTON,
     BATTLE_BUTTON,
+    BATTLE_BUTTON2,
+    BATTLE_BUTTON3,
+    BATTLE_BUTTON4,
+    BLANK,
+    BLANK2,
+    BLANK3,
+    BLANK4,
+    BLANK5,
     CLOSE_BUTTON,
     CONFIRM_BUTTON_BLUE,
     CONFIRM_BUTTON_RED,
@@ -21,7 +29,19 @@ enum Component {
     DUEL_LOG,
     DUEL_LOG_HALF,
     DURING_BATTLE_PHASE,
+    DURING_BATTLE_PHASE2,
+    DURING_BATTLE_PHASE3,
+    DURING_BATTLE_PHASE4,
+    DURING_BATTLE_PHASE5,
+    DRAW_DECK,
+    DRAW_DECK2,
+    DRAW_DECK3,
+    DRAW_DECK4,
+    DRAW_DECK5,
     END_TURN_BUTTON,
+    END_TURN_BUTTON2,
+    END_TURN_BUTTON3,
+    END_TURN_BUTTON4,
     ERROR_SCREEN,
     GATE_BUTTON,
     GATE_BUTTON_MINIMIZED,
@@ -32,6 +52,8 @@ enum Component {
     GATE_BUTTON_STREET,
     GATE_BUTTON_STREET_MINIMIZED,
     HIGHLIGHTED_MONSTER,
+    HIGHLIGHTED_MONSTER2,
+    HIGHLIGHTED_MONSTER3,
     IN_GATE,
     INITIATE_LINK,
     LOAD_BLACK,
@@ -41,17 +63,24 @@ enum Component {
     NORMAL_SUMMON_BUTTON,
     OK_BUTTON,
     OPPONENT_FRONTROW,
+    OPPONENT_MONSTER1,
+    OPPONENT_MONSTER2,
+    OPPONENT_MONSTER3,
     OPPONENT_MONSTER_SELECT,
     OPPONENT_TURN,
     PLAYER_DRAW,
     PLAYER_TURN,
     PLAYER_TURN_MP,
+    PLAYER_WIN,
+    PLAYER_WIN2,
     REWARDS1X_BUTTON,
     REWARDS1X_BUTTON_MINIMIZED,
     RETRY_BUTTON,
     REWARDS3X_BUTTON,
     SELECT_PHASE_BUTTON,
     SELECT_POSITION_BUTTON,
+    SELECT_POSITION_BUTTON2,
+    SELECT_POSITION_BUTTON3,
     TURN_ONE
 };
 
@@ -71,6 +100,9 @@ inline std::string to_string(Component c) {
         case DUEL_LOG_HALF:                   return "DUEL_LOG_HALF";
         case DURING_BATTLE_PHASE:             return "DURING_BATTLE_PHASE";
         case END_TURN_BUTTON:                 return "END_TURN_BUTTON";
+        case END_TURN_BUTTON2:                 return "END_TURN_BUTTON";
+        case END_TURN_BUTTON3:                 return "END_TURN_BUTTON";
+        case END_TURN_BUTTON4:                 return "END_TURN_BUTTON";
         case ERROR_SCREEN:                    return "ERROR_SCREEN";
         case GATE_BUTTON:                     return "GATE_BUTTON";
         case GATE_BUTTON_MINIMIZED:           return "GATE_BUTTON_MINIMIZED";
@@ -95,6 +127,7 @@ inline std::string to_string(Component c) {
         case PLAYER_DRAW:                     return "PLAYER_DRAW";
         case PLAYER_TURN:                     return "PLAYER_TURN";
         case PLAYER_TURN_MP:                  return "PLAYER_TURN_MP";
+        case PLAYER_WIN:                      return "PLAYER_WIN";
         case REWARDS1X_BUTTON:                return "REWARDS1X_BUTTON";
         case REWARDS1X_BUTTON_MINIMIZED:      return "REWARDS1X_BUTTON_MINIMIZED";
         case RETRY_BUTTON:                    return "RETRY_BUTTON";

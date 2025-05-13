@@ -12,8 +12,9 @@ public:
     bool isPlayerTurn();
     bool isDrawPhase();
     bool isBattlePhase();
-    bool isBoardCleared();
+    bool allAttacksPermormed();
     bool isPlayerTurnOne();
+    bool clickBlank();
     bool draw();
     bool selectMonster();
     bool normalSummon();
