@@ -146,7 +146,7 @@ MatchResult GameScreen::findComponentWithMask(const std::string& path, float acc
     }
 
     if (dimensions != _1920x1080)
-        component = resizeComponent(component);  // Agora usando o Mat, não o path!
+        component = resizeComponent(component);
 
     if (component.empty()) {
         std::cerr << "Component is empty after resizing: " << path << "\n";
@@ -196,7 +196,7 @@ MatchResult GameScreen::findComponentWithMask(const Component& c, float accuracy
     }
 
     if (dimensions != _1920x1080)
-        component = resizeComponent(component);  // Agora usando o Mat, não o path!
+        component = resizeComponent(component);
 
     if (component.empty()) {
         std::cerr << "Component is empty after resizing: " << path << "\n";

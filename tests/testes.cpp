@@ -359,11 +359,11 @@ int main() {
     double confidence = 0.0;
     double confidenceMascara = 0.0;
 
-    thread displayThread(processComponent, componentPaths[DURING_BATTLE_PHASE3]);
+    thread displayThread(processComponent, componentPaths[IN_GATE]);
 
     while (true) {
-        MatchResult resultadoMascara = findComponentWithMask(componentPaths[DURING_BATTLE_PHASE3], accuracy, confidenceMascara);
-        MatchResult resultadoSemMascara = findComponent(componentPaths[DURING_BATTLE_PHASE3], accuracy, confidence);
+        MatchResult resultadoMascara = findComponentWithMask(componentPaths[IN_GATE], accuracy, confidenceMascara);
+        MatchResult resultadoSemMascara = findComponent(componentPaths[IN_GATE], accuracy, confidence);
 
         cout << "--- Comparacao ---\n";
         if (resultadoMascara.found) {

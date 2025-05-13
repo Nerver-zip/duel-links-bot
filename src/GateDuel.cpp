@@ -10,8 +10,10 @@ void GateDuel::run() {
     Duel duel;
 
     std::cout << "[INFO] Starting gate duel automation..." << std::endl;
-
-    while (!duel.isDueling()) {
+    int tries = 0;
+    bool res;
+    while (!duel.isDueling() && tries < 3) {
+        tries++;
         if (!isAtGate()) {
             std::cout << "[INFO] Not at the gate. Trying to click the gate button..." << std::endl;
             if (!screen.waitFor(GATE_BUTTON, [&]() { return clickGate(); }, 10000, 100)) {
@@ -19,8 +21,10 @@ void GateDuel::run() {
                 continue;
             }
         }
-
-        if (screen.waitFor(REWARDS1X_BUTTON, [&]() { return isReward_x1(); }, 5000, 100)) {
+        else
+            std::cout << "[INFO] At the gate..." << "\n";
+        
+            if (screen.waitFor(REWARDS1X_BUTTON, [&]() { return isReward_x1(); }, 5000, 100)) {
             std::cout << "[INFO] Selecting level and rewards..." << std::endl;
             screen.waitFor(REWARDS3X_BUTTON, [&]() { return selectReward_x3(); }, 3000, 100);
             screen.waitFor(LVL_10_BUTTON, [&]() { return selectLvl10(); }, 3000, 100);
@@ -29,14 +33,13 @@ void GateDuel::run() {
         std::cout << "[INFO] Starting duel..." << std::endl;
         screen.waitFor(DUEL_BUTTON, [&]() { return startDuel(); }, 3000, 100);
         screen.waitFor(DIALOGUE_BUTTON, [&]() { return skipDialogue(); }, 3000, 100);
-        screen.waitFor(DUEL_BUTTON, [&]() { return startDuel(); }, 3000, 500);
+        res = screen.waitFor(DUEL_BUTTON, [&]() { return startDuel(); }, 3000, 500);
         screen.sleep(17000);
     }
 
     int turnCount = 0;
     int monsterCount = 0;
-    bool res;
-    std::cout << "[INFO] Duel started. Waiting for initial phase..." << std::endl;
+    if (res) std::cout << "[INFO] Duel started. Waiting for initial phase..." << std::endl;
     bool skipBP = false;
     while (!duel.isOver()) {
         std::cout << "[INFO] Player's turn." << std::endl;
@@ -108,8 +111,10 @@ void GateDuel::run() {
     screen.waitFor(OK_BUTTON, [&]() { return screen.clickOkButton(); }, 10000, 100);
 
     std::cout << "[INFO] Returning to gate to start next duel..." << std::endl;
-    while (!isAtGate() && !foundGateButton()) {
-        screen.waitFor(LOGO, [&]() { return screen.skip(); }, 10000, 100);
+    while (!foundGateButton()) {
+        res = screen.waitFor(LOGO, [&]() { return screen.skip(); }, 10000, 100);
+        if(!res)
+            screen.waitFor(OK_BUTTON, [&]() { return screen.clickOkButton(); }, 1000, 100);  
     }
 
     std::cout << "[INFO] Ready for the next duel!" << std::endl;
