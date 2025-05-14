@@ -26,11 +26,11 @@ void GateDuel::run() {
             }
         }
         else
+        {
             std::cout << "[INFO] At the gate..." << "\n";
-        
-            if (screen.waitFor(REWARDS1X_BUTTON, [&]() { return isReward_x1(); }, 5000, 100)) {
-            std::cout << "[INFO] Selecting level and rewards..." << std::endl;
-            screen.waitFor(REWARDS3X_BUTTON, [&]() { return selectReward_x3(); }, 3000, 100);
+            std::cout << "[INFO] Selecting level and rewards..." << "\n";
+            if (screen.waitFor(REWARDS1X_BUTTON, [&]() { return isReward_x1(); }, 5000, 100)) 
+                screen.waitFor(REWARDS3X_BUTTON, [&]() { return selectReward_x3(); }, 3000, 100);
             if (level == 10)
                 screen.waitFor(LVL_10_BUTTON, [&]() { return selectLvl10(); }, 3000, 100);
             else
