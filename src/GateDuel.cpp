@@ -5,6 +5,10 @@
 #include "Duel.h"
 #include "GateDuel.h"
 
+GateDuel::GateDuel(int level) {
+    this->level = level;
+}
+
 void GateDuel::run() {
     GameScreen& screen = GameScreen::getInstance();
     Duel duel;
@@ -27,14 +31,17 @@ void GateDuel::run() {
             if (screen.waitFor(REWARDS1X_BUTTON, [&]() { return isReward_x1(); }, 5000, 100)) {
             std::cout << "[INFO] Selecting level and rewards..." << std::endl;
             screen.waitFor(REWARDS3X_BUTTON, [&]() { return selectReward_x3(); }, 3000, 100);
-            screen.waitFor(LVL_10_BUTTON, [&]() { return selectLvl10(); }, 3000, 100);
+            if (level == 10)
+                screen.waitFor(LVL_10_BUTTON, [&]() { return selectLvl10(); }, 3000, 100);
+            else
+                screen.waitFor(LVL_20_BUTTON, [&]() { return selectLvl20(); }, 3000, 100);
         }
 
         std::cout << "[INFO] Starting duel..." << std::endl;
         screen.waitFor(DUEL_BUTTON, [&]() { return startDuel(); }, 3000, 100);
         screen.waitFor(DIALOGUE_BUTTON, [&]() { return skipDialogue(); }, 3000, 100);
         res = screen.waitFor(DUEL_BUTTON, [&]() { return startDuel(); }, 3000, 500);
-        screen.sleep(17000);
+        screen.sleep(20000);
     }
 
     int turnCount = 0;
@@ -168,6 +175,11 @@ bool GateDuel::clickGate(){
 bool GateDuel::selectLvl10(){
     GameScreen& screen = GameScreen::getInstance();
     auto result = screen.clickComponent(LVL_10_BUTTON, 0.85);
+    return result.found;
+}
+bool GateDuel::selectLvl20(){
+    GameScreen& screen = GameScreen::getInstance();
+    auto result = screen.clickComponent(LVL_20_BUTTON, 0.85);
     return result.found;
 }
 bool GateDuel::isReward_x1(){

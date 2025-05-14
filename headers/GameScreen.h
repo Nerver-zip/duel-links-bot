@@ -75,6 +75,7 @@ private:
         {LOAD_BLACK, "../assets/load_black.png"},
         {LOGO, "../assets/logo.png"},
         {LVL_10_BUTTON, "../assets/lvl_10_button.png"},
+        {LVL_20_BUTTON, "../assets/lvl_20_button.png"},
         {NEXT_BUTTON, "../assets/next_button.png"},
         {NORMAL_SUMMON_BUTTON, "../assets/normal_summon_button.png"},
         {OK_BUTTON, "../assets/ok_button.png"},

@@ -59,6 +59,7 @@ enum Component {
     LOAD_BLACK,
     LOGO,
     LVL_10_BUTTON,
+    LVL_20_BUTTON,
     NEXT_BUTTON,
     NORMAL_SUMMON_BUTTON,
     OK_BUTTON,
@@ -118,6 +119,7 @@ inline std::string to_string(Component c) {
         case LOAD_BLACK:                      return "LOAD_BLACK";
         case LOGO:                            return "LOGO";
         case LVL_10_BUTTON:                   return "LVL_10_BUTTON";
+        case LVL_20_BUTTON:                   return "LVL_20_BUTTON";
         case NEXT_BUTTON:                     return "NEXT_BUTTON";
         case NORMAL_SUMMON_BUTTON:            return "NORMAL_SUMMON_BUTTON";
         case OK_BUTTON:                       return "OK_BUTTON";

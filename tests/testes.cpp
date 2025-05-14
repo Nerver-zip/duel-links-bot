@@ -76,6 +76,7 @@ enum Component {
     LOAD_BLACK,
     LOGO,
     LVL_10_BUTTON,
+    LVL_20_BUTTON,
     NEXT_BUTTON,
     NORMAL_SUMMON_BUTTON,
     OK_BUTTON,
@@ -152,6 +153,7 @@ static inline std::unordered_map<Component, std::string> componentPaths = {
     {LOAD_BLACK, "../assets/load_black.png"},
     {LOGO, "../assets/logo.png"},
     {LVL_10_BUTTON, "../assets/lvl_10_button.png"},
+    {LVL_20_BUTTON, "../assets/lvl_20_button.png"},
     {NEXT_BUTTON, "../assets/next_button.png"},
     {NORMAL_SUMMON_BUTTON, "../assets/normal_summon_button.png"},
     {OK_BUTTON, "../assets/ok_button.png"},
@@ -359,11 +361,11 @@ int main() {
     double confidence = 0.0;
     double confidenceMascara = 0.0;
 
-    thread displayThread(processComponent, componentPaths[IN_GATE]);
+    thread displayThread(processComponent, componentPaths[LVL_20_BUTTON]);
 
     while (true) {
-        MatchResult resultadoMascara = findComponentWithMask(componentPaths[IN_GATE], accuracy, confidenceMascara);
-        MatchResult resultadoSemMascara = findComponent(componentPaths[IN_GATE], accuracy, confidence);
+        MatchResult resultadoMascara = findComponentWithMask(componentPaths[LVL_20_BUTTON], accuracy, confidenceMascara);
+        MatchResult resultadoSemMascara = findComponent(componentPaths[LVL_20_BUTTON], accuracy, confidence);
 
         cout << "--- Comparacao ---\n";
         if (resultadoMascara.found) {

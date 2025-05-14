@@ -7,7 +7,7 @@
 int main() {
     //while GUI is not ready...
     GameScreen& screen = GameScreen::init(_1280x720, 1.25f); //resolution, zoom
-    GateDuel duel;
+    GateDuel duel(20);
     while (1)
     {
         duel.run();

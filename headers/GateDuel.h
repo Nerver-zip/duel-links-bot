@@ -9,15 +9,18 @@
 
 class GateDuel {
 private:
+    int level;
     bool isAtGate();
     bool foundGateButton();
     bool clickGate();
     bool selectLvl10();
+    bool selectLvl20();
     bool isReward_x1();
     bool selectReward_x3();
     bool startDuel();
     bool skipDialogue();
 public:
+    GateDuel(int level);
     void run();
 };
 
