@@ -312,7 +312,15 @@ MatchResult GameScreen::clickComponent_withMask(const Component& c, float accura
 
 bool GameScreen::clickOkButton(){
     MouseEvents mouse;
-    auto result = findComponent(componentPaths[OK_BUTTON], 0.9);
+    auto result = findComponent(componentPaths[OK_BUTTON], 0.8);
+    if (result.found)
+        mouse.leftClick(result.coordinates.first, result.coordinates.second);
+    return result.found;
+}
+
+bool GameScreen::clickNextButton(){
+    MouseEvents mouse;
+    auto result = findComponent(componentPaths[NEXT_BUTTON], 0.8);
     if (result.found)
         mouse.leftClick(result.coordinates.first, result.coordinates.second);
     return result.found;
@@ -329,3 +337,5 @@ bool GameScreen::skip(){
         mouse.rightClick(result.coordinates.first, result.coordinates.second);
     return result.found;
 }
+
+

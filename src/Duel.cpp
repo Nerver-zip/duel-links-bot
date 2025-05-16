@@ -7,6 +7,21 @@
 #include "Util.h"
 #include "MouseEvents.h"
 
+bool Duel::startDuel(){
+    GameScreen& screen = GameScreen::getInstance();
+    auto result = screen.clickComponent(DUEL_BUTTON, 0.9);
+    return result.found;    
+}
+bool Duel::startAutoDuel(){
+    GameScreen& screen = GameScreen::getInstance();
+    auto result = screen.clickComponent(AUTO_DUEL, 0.9);
+    return result.found;   
+}
+bool Duel::skipDialogue(){
+    GameScreen& screen = GameScreen::getInstance();
+    auto result = screen.clickComponent(DIALOGUE_BUTTON, 0.9);
+    return result.found;
+}
 bool Duel::isDueling(){
     GameScreen& screen = GameScreen::getInstance();
     auto result = screen.findComponent(DUEL_LOG);
@@ -236,7 +251,11 @@ bool Duel::endTurn(){
 bool Duel::isOver(){
     const std::vector<Component> components = {
         PLAYER_WIN,
-        PLAYER_WIN2
+        PLAYER_WIN2,
+        OPPONENT_WIN,
+        OPPONENT_WIN2,
+        DUEL_OVER_DRAW,
+        DUEL_OVER_DRAW2,
     };
     GameScreen& screen = GameScreen::getInstance();
     for (const auto& component : components)

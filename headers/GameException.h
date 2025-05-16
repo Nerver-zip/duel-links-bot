@@ -15,6 +15,7 @@ public:
     bool handleConnectionError();
     bool handleGameCrash();
     bool handleFatalError();
+    bool handleOutlierEvent();
 };
 
 #endif

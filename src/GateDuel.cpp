@@ -5,11 +5,7 @@
 #include "Duel.h"
 #include "GateDuel.h"
 
-GateDuel::GateDuel(int level) {
-    this->level = level;
-}
-
-void GateDuel::run() {
+void GateDuel::run(int level) {
     GameScreen& screen = GameScreen::getInstance();
     Duel duel;
 
@@ -26,21 +22,21 @@ void GateDuel::run() {
             }
         }
         else
-        {
-            std::cout << "[INFO] At the gate..." << "\n";
+            std::   cout << "[INFO] At the gate..." << "\n";
+            
             std::cout << "[INFO] Selecting level and rewards..." << "\n";
-            if (screen.waitFor(REWARDS1X_BUTTON, [&]() { return isReward_x1(); }, 5000, 100)) 
+            if (screen.waitFor(REWARDS1X_BUTTON, [&]() { return isReward_x1(); }, 5000, 100)){
                 screen.waitFor(REWARDS3X_BUTTON, [&]() { return selectReward_x3(); }, 3000, 100);
-            if (level == 10)
-                screen.waitFor(LVL_10_BUTTON, [&]() { return selectLvl10(); }, 3000, 100);
-            else
-                screen.waitFor(LVL_20_BUTTON, [&]() { return selectLvl20(); }, 3000, 100);
-        }
-
+                if (level == 10)
+                    screen.waitFor(LVL_10_BUTTON, [&]() { return selectLvl10(); }, 3000, 100);
+                else
+                    screen.waitFor(LVL_20_BUTTON, [&]() { return selectLvl20(); }, 3000, 100);
+            }
+        
         std::cout << "[INFO] Starting duel..." << std::endl;
-        screen.waitFor(DUEL_BUTTON, [&]() { return startDuel(); }, 3000, 100);
-        screen.waitFor(DIALOGUE_BUTTON, [&]() { return skipDialogue(); }, 3000, 100);
-        res = screen.waitFor(DUEL_BUTTON, [&]() { return startDuel(); }, 3000, 500);
+        screen.waitFor(DUEL_BUTTON, [&]() { return duel.startDuel(); }, 3000, 100);
+        screen.waitFor(DIALOGUE_BUTTON, [&]() { return duel.skipDialogue(); }, 3000, 100);
+        res = screen.waitFor(DUEL_BUTTON, [&]() { return duel.startDuel(); }, 3000, 500);
         screen.sleep(20000);
     }
 
@@ -48,7 +44,8 @@ void GateDuel::run() {
     int monsterCount = 0;
     if (res) std::cout << "[INFO] Duel started. Waiting for initial phase..." << std::endl;
     bool skipBP = false;
-    while (!duel.isOver()) {
+    while (!duel.isOver() && turnCount < 10) {
+        turnCount++;
         std::cout << "[INFO] Player's turn." << std::endl;
         if (!duel.isPlayerTurnOne() && !duel.isOver()) {
             std::cout << "[INFO] Post-first turn. Performing draw and main plays...\n";
@@ -90,13 +87,15 @@ void GateDuel::run() {
             screen.sleep(3000);
             int attacks = 0;
             while (attacks < monsterCount && duel.isBattlePhase() && !duel.isOver()) {
+                GameException handler;
                 screen.waitFor_noexcept(HIGHLIGHTED_MONSTER, [&]() { return duel.selectMonsterToAttack(); }, 10000, 10);
                 auto attacked = screen.waitFor_noexcept(ATTACK_BUTTON, [&]() { return duel.attack(); }, 10000, 100);
                 screen.waitFor_noexcept(ATTACK_BUTTON, [&]() { return duel.selectOpponentMonsterToAttack(); }, 2000, 100);
                 if(attacked){
                     std::cout << "Attack performed!\n"; 
                     attacks++;
-                } 
+                }
+                handler.checkConnectionError();
                 screen.sleep(1000);
             }
         }
@@ -112,8 +111,10 @@ void GateDuel::run() {
                 screen.sleep(5000);
             }
         }
+        turnCount++;
     }
 
+    GameException handler;
     std::cout << "[INFO] Duel ended. Confirming result...\n";
     screen.waitFor(OK_BUTTON, [&]() { return screen.clickOkButton(); }, 10000, 100);
 
@@ -121,7 +122,8 @@ void GateDuel::run() {
     while (!foundGateButton()) {
         res = screen.waitFor(LOGO, [&]() { return screen.skip(); }, 10000, 100);
         if(!res)
-            screen.waitFor(OK_BUTTON, [&]() { return screen.clickOkButton(); }, 1000, 100);  
+            screen.waitFor(OK_BUTTON, [&]() { return screen.clickOkButton(); }, 1000, 100);
+        handler.handleOutlierEvent();
     }
 
     std::cout << "[INFO] Ready for the next duel!" << std::endl;
@@ -193,16 +195,5 @@ bool GateDuel::isReward_x1(){
 bool GateDuel::selectReward_x3(){
     GameScreen& screen = GameScreen::getInstance();
     auto result = screen.clickComponent(REWARDS3X_BUTTON, 0.8);
-    return result.found;
-}
-bool GateDuel::startDuel(){
-    GameScreen& screen = GameScreen::getInstance();
-    auto result = screen.clickComponent(DUEL_BUTTON, 0.9);
-    return result.found;    
-}
-
-bool GateDuel::skipDialogue(){
-    GameScreen& screen = GameScreen::getInstance();
-    auto result = screen.clickComponent(DIALOGUE_BUTTON, 0.9);
     return result.found;
 }

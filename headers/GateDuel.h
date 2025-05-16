@@ -9,7 +9,6 @@
 
 class GateDuel {
 private:
-    int level;
     bool isAtGate();
     bool foundGateButton();
     bool clickGate();
@@ -17,11 +16,8 @@ private:
     bool selectLvl20();
     bool isReward_x1();
     bool selectReward_x3();
-    bool startDuel();
-    bool skipDialogue();
 public:
-    GateDuel(int level);
-    void run();
+    void run(int level);
 };
 
 #endif

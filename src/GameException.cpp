@@ -11,7 +11,7 @@
 bool GameException::checkConnectionError(){
     GameScreen& screen = GameScreen::getInstance();
     screen.updateScreen();
-    auto result = screen.findComponent(CONNECTION_ERROR_SCREEN, 0.9);
+    auto result = screen.findComponent(ERROR_SCREEN, 0.9);
     if(result.found){
        return handleConnectionError();
     }
@@ -34,7 +34,7 @@ bool GameException::handleConnectionError(){
     {   
         screen.clickRetryButton();
         std::this_thread::sleep_for(std::chrono::seconds(10));
-        exception = screen.findComponent(CONNECTION_ERROR_SCREEN);
+        exception = screen.findComponent(ERROR_SCREEN);
         count++;
         if (count == 100)
             throw std::runtime_error("Connection failed.\n");
@@ -48,4 +48,20 @@ bool GameException::handleGameCrash(){
 
 bool GameException::handleFatalError(){
     return true;
+}
+
+//handles stuff like gift festival that looks the screen until a specific button is pressed
+bool GameException::handleOutlierEvent(){
+    const std::vector<Component> components = {
+        YES_BUTTON,
+        CLOSE_BUTTON
+    };
+    GameScreen& screen = GameScreen::getInstance();
+    for (const auto& component : components)
+    {
+        auto result = screen.clickComponent(component, 0.8);
+        if(result.found)
+            return true;
+    }
+    return false;
 }

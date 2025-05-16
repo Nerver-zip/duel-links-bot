@@ -26,7 +26,10 @@ private:
 
     static inline std::unordered_map<Component, std::string> componentPaths = {
         {ARROW_BACK_BUTTON, "../assets/arrow_back_button.png"},
+        {ASSIST_DUEL, "../assets/assist_duel.png"},
+        {ASSISTING_PLAYERS, "../assets/assisting_players.png"},
         {ATTACK_BUTTON, "../assets/attack_button.png"},
+        {AUTO_DUEL, "../assets/auto_duel.png"},
         {BATTLE_BUTTON, "../assets/battle_button.png"},
         {BATTLE_BUTTON2, "../assets/battle_button2.png"},
         {BATTLE_BUTTON3, "../assets/battle_button3.png"},
@@ -43,6 +46,9 @@ private:
         {DIALOGUE_BUTTON, "../assets/dialogue_button.png"},
         {DUEL_BUTTON, "../assets/duel_button.png"},
         {DUEL_LOG, "../assets/duel_log.png"},
+        {DUEL_LOG_HALF, "../assets/duel_log_half.png"},
+        {DUEL_OVER_DRAW, "../assets/duel_over_draw.png"},
+        {DUEL_OVER_DRAW2, "../assets/duel_over_draw2.png"},
         {DUEL_LOG_HALF, "../assets/duel_log_half.png"},
         {DURING_BATTLE_PHASE, "../assets/during_battle_phase.png"},
         {DURING_BATTLE_PHASE2, "../assets/during_battle_phase2.png"},
@@ -85,11 +91,15 @@ private:
         {OPPONENT_MONSTER3, "../assets/opponent_monster3.png"},
         {OPPONENT_MONSTER_SELECT, "../assets/opponent_monster_select.png"},
         {OPPONENT_TURN, "../assets/opponent_turn.png"},
+        {OPPONENT_WIN, "../assets/opponent_win.png"},
+        {OPPONENT_WIN2, "../assets/opponent_win2.png"},
         {PLAYER_DRAW, "../assets/player_draw.png"},
         {PLAYER_TURN, "../assets/player_turn.png"},
         {PLAYER_TURN_MP, "../assets/player_turn_mp.png"},
         {PLAYER_WIN, "../assets/player_win.png"},
         {PLAYER_WIN2, "../assets/player_win2.png"},
+        {RAID_BUTTON, "../assets/raid_button.png"},
+        {RAID_EVENT, "../assets/raid_event.png"},
         {RETRY_BUTTON, "../assets/retry_button.png"},
         {REWARDS1X_BUTTON, "../assets/rewards1x_button.png"},
         {REWARDS1X_BUTTON_MINIMIZED, "../assets/rewards1x_button_minimized.png"},
@@ -98,7 +108,8 @@ private:
         {SELECT_POSITION_BUTTON, "../assets/select_position_button.png"},
         {SELECT_POSITION_BUTTON2, "../assets/select_position_button2.png"},
         {SELECT_POSITION_BUTTON3, "../assets/select_position_button3.png"},
-        {TURN_ONE, "../assets/turn_one.png"}
+        {TURN_ONE, "../assets/turn_one.png"},
+        {YES_BUTTON, "../assets/yes_button.png"}
     };
 
     void screenshot();
@@ -128,6 +139,7 @@ public:
 
     void click(int x, int y);
     bool clickOkButton();
+    bool clickNextButton();
     bool skip();
 
     MatchResult clickComponent(const Component& c, float accuracy);

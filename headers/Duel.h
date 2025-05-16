@@ -8,6 +8,9 @@
 
 class Duel {
 public:
+    bool startDuel();
+    bool startAutoDuel();
+    bool skipDialogue();
     bool isDueling();
     bool isPlayerTurn();
     bool isDrawPhase();
