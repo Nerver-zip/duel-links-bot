@@ -50,7 +50,7 @@ bool GameException::handleFatalError(){
     return true;
 }
 
-//handles stuff like gift festival that looks the screen until a specific button is pressed
+//handles stuff like gift festival that locks the screen until a specific button is pressed
 bool GameException::handleOutlierEvent(){
     const std::vector<Component> components = {
         YES_BUTTON,

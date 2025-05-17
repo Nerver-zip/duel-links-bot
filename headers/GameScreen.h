@@ -43,6 +43,8 @@ private:
         {CONFIRM_BUTTON_BLUE, "../assets/confirm_button_blue.png"},
         {CONFIRM_BUTTON_RED, "../assets/confirm_button_red.png"},
         {CONNECTION_ERROR_SCREEN, "../assets/connection_error_screen.png"},
+        {COPY_DECK, "../assets/copy_deck.png"},
+        {DECK_EDITOR_BUTTON, "../assets/deck_editor_button.png"},
         {DIALOGUE_BUTTON, "../assets/dialogue_button.png"},
         {DUEL_BUTTON, "../assets/duel_button.png"},
         {DUEL_LOG, "../assets/duel_log.png"},

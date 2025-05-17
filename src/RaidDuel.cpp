@@ -10,7 +10,10 @@ void RaidDuel::run(){
     int tries = 0;
 
     if(!isAtRaidEvent())
+    {
+        handler.handleOutlierEvent();
         screen.clickComponent(RAID_BUTTON, 0.85f);
+    }
 
     while (!duel.isDueling() && tries < 3) {
         if(screen.findComponent(DUEL_BUTTON, 0.7f).found)
@@ -23,24 +26,33 @@ void RaidDuel::run(){
         tries++;
     }
 
+    //every once in a while if assist or duel buttons are not found, refresh the event screen
+    if (tries == 3 && !screen.findComponent(ASSISTING_PLAYERS, 0.8f).found)
+        updateEvent();
+        
+    auto start = std::chrono::steady_clock::now();
     std::cout << "Dueling!" << "\n";
-    while(!duel.isOver()) {
+    while(!duel.isOver() && !screen.findComponent(ASSISTING_PLAYERS, 0.8f).found) {
+        auto now = std::chrono::steady_clock::now();
+        auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(now - start);
+        //this loop will run 3,33 min max
+        if(elapsed.count() > 200000){
+            std::cout << "Timeout!" << "\n";
+            break;
+        } 
         screen.sleep(5000);
     }
 
-    screen.waitFor(OK_BUTTON, [&]() { return screen.clickOkButton(); }, 10000, 100);
-    
+    screen.waitFor(OK_BUTTON, [&]() { return screen.clickOkButton(); }, 5000, 100);
     std::cout << "Getting rewards... (if any!)" << "\n";
-    
     while (!isAtRaidEvent() && !screen.findComponent(ASSISTING_PLAYERS, 0.8f).found){
-        screen.sleep(1000);
+        screen.sleep(2000);
         screen.skip();
+        handler.checkConnectionError();
         handler.handleOutlierEvent();
     }
     
-    screen.waitFor(NEXT_BUTTON, [&]() { return screen.clickNextButton(); }, 5000, 100);
-    screen.waitFor(NEXT_BUTTON, [&]() { return screen.clickNextButton(); }, 5000, 100);
-    screen.waitFor(OK_BUTTON, [&]() { return screen.clickOkButton(); }, 5000, 100);
+    getRewards();
 }
 
 bool RaidDuel::isAtRaidEvent(){
@@ -53,4 +65,26 @@ bool RaidDuel::selectAssistDuel(){
     GameScreen& screen = GameScreen::getInstance();
     auto result = screen.clickComponent(ASSIST_DUEL, 0.6f);
     return result.found;
+}
+
+void RaidDuel::getRewards(){
+    GameScreen& screen = GameScreen::getInstance();
+    screen.waitFor(NEXT_BUTTON, [&]() { return screen.clickNextButton(); }, 5000, 100);
+    screen.sleep(1000);
+    screen.waitFor(NEXT_BUTTON, [&]() { return screen.clickNextButton(); }, 5000, 100);
+    screen.waitFor(OK_BUTTON, [&]() { return screen.clickOkButton(); }, 5000, 100);
+}
+void RaidDuel::updateEvent(){
+    GameScreen& screen = GameScreen::getInstance();
+    std::cout << "Refreshing event page..." << "\n";
+    auto res = screen.clickComponent(DECK_EDITOR_BUTTON, 0.8f).found;
+    if (res)
+    {
+        res = screen.waitFor(COPY_DECK, [&]() { return screen.findComponent(COPY_DECK, 0.8f).found; }, 5000, 100); 
+        if(res) 
+            screen.waitFor(LOGO, [&]() { return screen.skip(); }, 5000, 100);
+        screen.sleep(2000);
+    }
+    if(screen.findComponent(COPY_DECK, 0.8f).found)
+        screen.waitFor(LOGO, [&]() { return screen.skip(); }, 5000, 100);
 }

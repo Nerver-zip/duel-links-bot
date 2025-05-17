@@ -43,7 +43,10 @@ enum Component {
     CONFIRM_BUTTON_BLUE,
     CONFIRM_BUTTON_RED,
     CONNECTION_ERROR_SCREEN,
+    COPY_DECK,
     CROPPED_OPONNENT_MONSTER,
+    DECK_EDITOR,
+    DECK_EDITOR_BUTTON,
     DIALOGUE_BUTTON,
     DUEL_BUTTON,
     DUEL_LOG,
@@ -133,6 +136,9 @@ enum Component {
         {CONFIRM_BUTTON_BLUE, "../assets/confirm_button_blue.png"},
         {CONFIRM_BUTTON_RED, "../assets/confirm_button_red.png"},
         {CONNECTION_ERROR_SCREEN, "../assets/connection_error_screen.png"},
+        {COPY_DECK, "../assets/copy_deck.png"},
+        {DECK_EDITOR, "../assets/deck_editor.png"},
+        {DECK_EDITOR_BUTTON, "../assets/deck_editor_button.png"},
         {DIALOGUE_BUTTON, "../assets/dialogue_button.png"},
         {DUEL_BUTTON, "../assets/duel_button.png"},
         {DUEL_LOG, "../assets/duel_log.png"},
@@ -384,11 +390,11 @@ int main() {
     double confidence = 0.0;
     double confidenceMascara = 0.0;
 
-    thread displayThread(processComponent, componentPaths[RAID_BUTTON]);
+    thread displayThread(processComponent, componentPaths[COPY_DECK]);
 
     while (true) {
-        MatchResult resultadoMascara = findComponentWithMask(componentPaths[RAID_BUTTON], accuracy, confidenceMascara);
-        MatchResult resultadoSemMascara = findComponent(componentPaths[RAID_BUTTON], accuracy, confidence);
+        MatchResult resultadoMascara = findComponentWithMask(componentPaths[COPY_DECK], accuracy, confidenceMascara);
+        MatchResult resultadoSemMascara = findComponent(componentPaths[COPY_DECK], accuracy, confidence);
 
         cout << "--- Comparacao ---\n";
         //if (resultadoMascara.found) {
@@ -412,10 +418,10 @@ int main() {
                  << " | Confianca: " << confidence << "\n";
 
             // Se a confiança for suficiente, faz o clique
-            if (confidence >= accuracy) {
-                leftClick(resultadoSemMascara.coordinates.first, resultadoSemMascara.coordinates.second, scale);
-                cout << "[SEM mask]     Clicado!\n";
-            }
+            //if (confidence >= accuracy) {
+            //    leftClick(resultadoSemMascara.coordinates.first, resultadoSemMascara.coordinates.second, scale);
+            //    cout << "[SEM mask]     Clicado!\n";
+            //}
         } else {
             cout << "[SEM mask]     NAO encontrado | Confianca: " << confidence << "\n";
         }

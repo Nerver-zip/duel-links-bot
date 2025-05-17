@@ -4,6 +4,8 @@ class RaidDuel {
 private:
     bool selectAssistDuel();
     bool isAtRaidEvent();
+    void getRewards();
+    void updateEvent();
 public:
     void run();
 };
