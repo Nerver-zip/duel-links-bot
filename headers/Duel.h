@@ -9,6 +9,7 @@
 class Duel {
 public:
     bool startDuel();
+    bool startRushDuel();
     bool startAutoDuel();
     bool skipDialogue();
     bool isDueling();
@@ -26,6 +27,7 @@ public:
     bool enterBattlePhase();
     bool selectMonsterToAttack();
     bool attack();
+    bool dragAttack();
     bool selectOpponentMonsterToAttack();
     bool clickConfirmButton();
     bool endTurn();

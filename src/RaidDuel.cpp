@@ -3,7 +3,7 @@
 #include "RaidDuel.h"
 #include "GameException.h"
 
-void RaidDuel::run(){
+void RaidDuel::run(int timeout){
     GameScreen& screen = GameScreen::getInstance();
     GameException handler;
     Duel duel;
@@ -11,17 +11,29 @@ void RaidDuel::run(){
 
     if(!isAtRaidEvent())
     {
+        if(screen.findComponent(COPY_DECK)){
+            screen.skip();
+            screen.sleep(1000);
+        }
         handler.handleOutlierEvent();
         screen.clickComponent(RAID_BUTTON, 0.85f);
     }
 
     while (!duel.isDueling() && tries < 3) {
-        if(screen.findComponent(DUEL_BUTTON, 0.7f).found)
+        if(screen.findComponent(COPY_DECK)){
+            screen.skip();
+            screen.sleep(1000);
+        }
+        if(screen.findComponent(ASSISTING_PLAYERS, 0.8f).found){
+            getRewards();
+            continue;
+        }
+        else if(screen.findComponent(DUEL_BUTTON, 0.7f).found)
             screen.waitFor(ASSIST_DUEL, [&]() { return screen.clickComponent(DUEL_BUTTON, 0.7f).found; }, 5000, 100);
         else
             screen.waitFor(ASSIST_DUEL, [&]() { return selectAssistDuel(); }, 5000, 100);
         screen.waitFor(DIALOGUE_BUTTON, [&]() { return duel.skipDialogue(); }, 5000, 100);
-        screen.waitFor(AUTO_DUEL, [&]() { return duel.startAutoDuel(); }, 5000, 100);
+        screen.waitFor(AUTO_DUEL, [&]() { return duel.startAutoDuel(); }, 7000, 100);
         handler.handleOutlierEvent();
         tries++;
     }
@@ -35,8 +47,8 @@ void RaidDuel::run(){
     while(!duel.isOver() && !screen.findComponent(ASSISTING_PLAYERS, 0.8f).found) {
         auto now = std::chrono::steady_clock::now();
         auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(now - start);
-        //this loop will run 3,33 min max
-        if(elapsed.count() > 200000){
+        screen.clickComponent(IN_GAME_AUTO_DUEL, 0.9f);
+        if(elapsed.count() > timeout){
             std::cout << "Timeout!" << "\n";
             break;
         } 
@@ -44,14 +56,18 @@ void RaidDuel::run(){
     }
 
     screen.waitFor(OK_BUTTON, [&]() { return screen.clickOkButton(); }, 5000, 100);
-    std::cout << "Getting rewards... (if any!)" << "\n";
+    std::cout << "Getting rewards..." << "\n";
     while (!isAtRaidEvent() && !screen.findComponent(ASSISTING_PLAYERS, 0.8f).found){
         screen.sleep(2000);
         screen.skip();
+        if(duel.isDueling())
+            break;
         handler.checkConnectionError();
         handler.handleOutlierEvent();
+        //this will handle the special pack event, rarely it does enter the deck editor, but we quickly return
+        //improve this in the future
+        screen.clickComponent(DECK_EDITOR_BUTTON, 0.8f);
     }
-    
     getRewards();
 }
 

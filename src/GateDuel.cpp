@@ -23,7 +23,6 @@ void GateDuel::run(int level) {
         }
         else
             std::   cout << "[INFO] At the gate..." << "\n";
-            
             std::cout << "[INFO] Selecting level and rewards..." << "\n";
             if (screen.waitFor(REWARDS1X_BUTTON, [&]() { return isReward_x1(); }, 5000, 100)){
                 screen.waitFor(REWARDS3X_BUTTON, [&]() { return selectReward_x3(); }, 3000, 100);
@@ -34,9 +33,9 @@ void GateDuel::run(int level) {
             }
         
         std::cout << "[INFO] Starting duel..." << std::endl;
-        screen.waitFor(DUEL_BUTTON, [&]() { return duel.startDuel(); }, 3000, 100);
-        screen.waitFor(DIALOGUE_BUTTON, [&]() { return duel.skipDialogue(); }, 3000, 100);
-        res = screen.waitFor(DUEL_BUTTON, [&]() { return duel.startDuel(); }, 3000, 500);
+        screen.waitFor(DUEL_BUTTON, [&]() { return duel.startDuel(); }, 5000, 100);
+        screen.waitFor(DIALOGUE_BUTTON, [&]() { return duel.skipDialogue(); }, 5000, 100);
+        res = screen.waitFor(DUEL_BUTTON, [&]() { return duel.startDuel(); }, 5000, 500);
         screen.sleep(20000);
     }
 
@@ -117,22 +116,26 @@ void GateDuel::run(int level) {
     GameException handler;
     std::cout << "[INFO] Duel ended. Confirming result...\n";
     screen.waitFor(OK_BUTTON, [&]() { return screen.clickOkButton(); }, 10000, 100);
+    screen.sleep(3000);
 
-    std::cout << "[INFO] Returning to gate to start next duel..." << std::endl;
-    while (!foundGateButton()) {
+    std::cout << "[INFO] Returning to gate to start next duel..." << "\n";
+    tries = 0;
+    while (!isAtGate() && !foundGateButton() && tries < 3) {
         res = screen.waitFor(LOGO, [&]() { return screen.skip(); }, 10000, 100);
-        if(!res)
+        if(!res){
             screen.waitFor(OK_BUTTON, [&]() { return screen.clickOkButton(); }, 1000, 100);
+            tries++;
+        }
         handler.handleOutlierEvent();
+        screen.sleep(2000);
     }
-
     std::cout << "[INFO] Ready for the next duel!" << std::endl;
 }   
 
 bool GateDuel::isAtGate(){
     GameScreen& screen = GameScreen::getInstance();
-    auto result = screen.findComponent(IN_GATE);
-    return result;
+    auto result = screen.findComponent(IN_GATE, 0.80f);
+    return result.found;
 }
 bool GateDuel::foundGateButton(){
     const std::vector<Component> buttons = {
@@ -149,8 +152,9 @@ bool GateDuel::foundGateButton(){
     for (const auto& button : buttons)
     {
         auto result = screen.findComponent(button);
-        if(result)
+        if(result){
             return true;
+        }
     }
     return false;
 }

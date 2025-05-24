@@ -58,3 +58,30 @@ void MouseEvents::clickButton(const Component& button, float accuracy){
         leftClick(result.coordinates.first, result.coordinates.second);
 }
 
+void MouseEvents::drag(int x1, int y1, int x2, int y2) {
+    GameScreen& screen = GameScreen::getInstance();
+
+    x1 = static_cast<int>(x1 / screen.getScale());
+    y1 = static_cast<int>(y1 / screen.getScale());
+    x2 = static_cast<int>(x2 / screen.getScale());
+    y2 = static_cast<int>(y2 / screen.getScale());
+
+    SetCursorPos(x1, y1);
+    Sleep(200);
+
+    INPUT inputDown = {0};
+    inputDown.type = INPUT_MOUSE;
+    inputDown.mi.dwFlags = MOUSEEVENTF_LEFTDOWN;
+    SendInput(1, &inputDown, sizeof(INPUT));
+    Sleep(100);
+
+    SetCursorPos(x2, y2);
+    Sleep(300);
+
+    INPUT inputUp = {0};
+    inputUp.type = INPUT_MOUSE;
+    inputUp.mi.dwFlags = MOUSEEVENTF_LEFTUP;
+    SendInput(1, &inputUp, sizeof(INPUT));
+}
+
+

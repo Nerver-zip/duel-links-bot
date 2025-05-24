@@ -8,7 +8,7 @@
 #include "Util.h"
 
 class GateDuel {
-private:
+protected:
     bool isAtGate();
     bool foundGateButton();
     bool clickGate();

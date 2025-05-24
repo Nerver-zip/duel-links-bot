@@ -12,6 +12,11 @@ bool Duel::startDuel(){
     auto result = screen.clickComponent(DUEL_BUTTON, 0.9);
     return result.found;    
 }
+bool Duel::startRushDuel(){
+    GameScreen& screen = GameScreen::getInstance();
+    auto result = screen.clickComponent(RUSH_DUEL, 0.9);
+    return result.found;   
+}
 bool Duel::startAutoDuel(){
     GameScreen& screen = GameScreen::getInstance();
     auto result = screen.clickComponent(AUTO_DUEL, 0.9);
@@ -82,9 +87,18 @@ bool Duel::allAttacksPermormed(){
     return true;
 }
 bool Duel::isPlayerTurnOne(){
+    const std::vector<Component> components = {
+        TURN_ONE,
+        TURN_ONE_RUSH
+    };
     GameScreen& screen = GameScreen::getInstance();
-    auto result = screen.findComponent(TURN_ONE);
-    return result;
+    for (const auto& component : components)
+    {
+        auto result = screen.findComponent(component, 0.9);
+        if (result.found)
+            return true;
+    }
+    return false;
 }
 bool Duel::draw(){
     const std::vector<Component> components = {
@@ -159,9 +173,18 @@ bool Duel::selectMonster(){
     return result.found; 
 }
 bool Duel::normalSummon(){
+    const std::vector<Component> components = {
+        NORMAL_SUMMON_BUTTON,
+        NORMAL_SUMMON_RUSH_BUTTON
+    };
     GameScreen& screen = GameScreen::getInstance();
-    auto result = screen.clickComponent(NORMAL_SUMMON_BUTTON, 0.9);
-    return result.found; 
+    for (const auto& component : components)
+    {
+        auto result = screen.clickComponent(component, 0.9);
+        if (result.found)
+            return true;
+    }
+    return false;
 }
 bool Duel::selectPosition(){
     const std::vector<Component> components = {
@@ -181,7 +204,7 @@ bool Duel::selectPosition(){
 bool Duel::selectPhase(){
     GameScreen& screen = GameScreen::getInstance();
     auto result = screen.clickComponent(SELECT_PHASE_BUTTON, 0.9);
-    return result.found; 
+    return result.found;
 }
 bool Duel::enterBattlePhase(){
     const std::vector<Component> components = {
@@ -218,6 +241,24 @@ bool Duel::attack(){
     GameScreen& screen = GameScreen::getInstance();
     auto result = screen.clickComponent(ATTACK_BUTTON, 0.9);
     return result.found; 
+}
+bool Duel::dragAttack(){
+    const std::vector<Component> components = {
+        HIGHLIGHTED_MONSTER,
+        HIGHLIGHTED_MONSTER2,
+        HIGHLIGHTED_MONSTER3
+    };
+    GameScreen& screen = GameScreen::getInstance();
+    for (const auto& component : components)
+    {
+        auto result = screen.clickComponent_withMask(component, 0.8);
+        if (result.found){
+            MouseEvents mouse;
+            mouse.drag(result.coordinates.first, result.coordinates.second, result.coordinates.first, result.coordinates.second - 100);
+            return true;
+        }
+    }
+    return false;
 }
 bool Duel::selectOpponentMonsterToAttack(){
     GameScreen& screen = GameScreen::getInstance();

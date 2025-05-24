@@ -7,5 +7,5 @@ private:
     void getRewards();
     void updateEvent();
 public:
-    void run();
+    void run(int timeout);
 };
