@@ -439,46 +439,45 @@ int main() {
     cout << "Iniciando em 3 segundos...\n";
     this_thread::sleep_for(chrono::seconds(3));
 
-    float accuracy = 0.8f; // Precisão para encontrar o componente
+    float accuracy = 0.85f; // Precisão para encontrar o componente
     double confidence = 0.0;
     double confidenceMascara = 0.0;
 
-    thread displayThread(processComponent, componentPaths[IN_GAME_AUTO_DUEL]);
+    thread displayThread(processComponent, componentPaths[HIGHLIGHTED_MONSTER3]);
 
     while (true) {
-        MatchResult resultadoMascara = findComponentWithMask(componentPaths[IN_GAME_AUTO_DUEL], accuracy, confidenceMascara);
-        MatchResult resultadoSemMascara = findComponent(componentPaths[IN_GAME_AUTO_DUEL], accuracy, confidence);
+        MatchResult resultadoMascara = findComponentWithMask(componentPaths[HIGHLIGHTED_MONSTER3], accuracy, confidenceMascara);
+        MatchResult resultadoSemMascara = findComponent(componentPaths[HIGHLIGHTED_MONSTER3], accuracy, confidence);
 
         cout << "--- Comparacao ---\n";
-        //if (resultadoMascara.found) {
-        //    cout << "[COM mask]     Encontrado em: " 
-        //         << resultadoMascara.coordinates.first << ", " 
-        //         << resultadoMascara.coordinates.second 
-        //         << " | Confianca: " << confidenceMascara << "\n";
-        //
-        //    if (confidenceMascara >= accuracy) {
-        //        drag(resultadoMascara.coordinates.first, resultadoMascara.coordinates.second, resultadoMascara.coordinates.first,
-        //        resultadoMascara.coordinates.second - 100, scale);
-        //        cout << "[COM mask]     Clicado!\n";
-        //    }
-        //} else {
-        //    cout << "[COM mask]     NAO encontrado | Confianca: " << confidenceMascara << "\n";
-        //}
-
-        if (resultadoSemMascara.found) {
-            cout << "[SEM mask]     Encontrado em: " 
-                 << resultadoSemMascara.coordinates.first << ", " 
-                 << resultadoSemMascara.coordinates.second 
-                 << " | Confianca: " << confidence << "\n";
-//
-            //Se a confiança for suficiente, faz o clique
-            if (confidence >= accuracy) {
-                leftClick(resultadoSemMascara.coordinates.first, resultadoSemMascara.coordinates.second, scale);
-                cout << "[SEM mask]     Clicado!\n";
+        if (resultadoMascara.found) {
+            cout << "[COM mask]     Encontrado em: " 
+                 << resultadoMascara.coordinates.first << ", " 
+                 << resultadoMascara.coordinates.second 
+                 << " | Confianca: " << confidenceMascara << "\n";
+        
+            if (confidenceMascara >= accuracy) {
+                leftClick(resultadoMascara.coordinates.first, resultadoMascara.coordinates.second, scale);
+                cout << "[COM mask]     Clicado!\n";
             }
         } else {
-            cout << "[SEM mask]     NAO encontrado | Confianca: " << confidence << "\n";
+            cout << "[COM mask]     NAO encontrado | Confianca: " << confidenceMascara << "\n";
         }
+
+        //if (resultadoSemMascara.found) {
+        //    cout << "[SEM mask]     Encontrado em: " 
+        //         << resultadoSemMascara.coordinates.first << ", " 
+        //         << resultadoSemMascara.coordinates.second 
+        //         << " | Confianca: " << confidence << "\n";
+
+        //    //Se a confiança for suficiente, faz o clique
+        //    if (confidence >= accuracy) {
+        //        leftClick(resultadoSemMascara.coordinates.first, resultadoSemMascara.coordinates.second, scale);
+        //        cout << "[SEM mask]     Clicado!\n";
+        //    }
+        //} else {
+        //    cout << "[SEM mask]     NAO encontrado | Confianca: " << confidence << "\n";
+        //}
 
         cout << "------------------\n";
 

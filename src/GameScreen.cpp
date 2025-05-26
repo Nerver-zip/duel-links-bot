@@ -176,6 +176,10 @@ MatchResult GameScreen::findComponentWithMask(const std::string& path, float acc
     Point minLoc, maxLoc;
     minMaxLoc(result, &minVal, &maxVal, &minLoc, &maxLoc);
 
+    //handle inf and NaN
+    if (!std::isfinite(maxVal))
+        maxVal = 0.0;
+
     if (maxVal >= accuracy) {
         std::pair<int, int> coordinates = {
             maxLoc.x + rgbComponent.cols / 2,
@@ -187,7 +191,7 @@ MatchResult GameScreen::findComponentWithMask(const std::string& path, float acc
 }
 
 MatchResult GameScreen::findComponentWithMask(const Component& c, float accuracy){
-        src = updateScreen();
+    src = updateScreen();
     auto path = componentPaths[c];
     Mat component = imread(path, IMREAD_UNCHANGED);
     if (component.empty() || component.channels() != 4) {
@@ -225,6 +229,10 @@ MatchResult GameScreen::findComponentWithMask(const Component& c, float accuracy
     double minVal, maxVal;
     Point minLoc, maxLoc;
     minMaxLoc(result, &minVal, &maxVal, &minLoc, &maxLoc);
+
+    //handle inf and NaN
+    if (!std::isfinite(maxVal))
+        maxVal = 0.0;
 
     if (maxVal >= accuracy) {
         std::pair<int, int> coordinates = {

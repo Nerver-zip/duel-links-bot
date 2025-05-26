@@ -231,7 +231,7 @@ bool Duel::selectMonsterToAttack(){
     GameScreen& screen = GameScreen::getInstance();
     for (const auto& component : components)
     {
-        auto result = screen.clickComponent_withMask(component, 0.8);
+        auto result = screen.clickComponent_withMask(component, 0.85f);
         if (result.found)
             return true;
     }
@@ -251,7 +251,7 @@ bool Duel::dragAttack(){
     GameScreen& screen = GameScreen::getInstance();
     for (const auto& component : components)
     {
-        auto result = screen.clickComponent_withMask(component, 0.8);
+        auto result = screen.findComponentWithMask(component, 0.85f);
         if (result.found){
             MouseEvents mouse;
             mouse.drag(result.coordinates.first, result.coordinates.second, result.coordinates.first, result.coordinates.second - 100);
