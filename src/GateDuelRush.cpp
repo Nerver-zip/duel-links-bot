@@ -125,6 +125,7 @@ void GateDuelRush::run(int level) {
             screen.waitFor(OK_BUTTON, [&]() { return screen.clickOkButton(); }, 1000, 100);
             tries++;
         }
+        handler.checkConnectionError();
         handler.handleOutlierEvent();
         screen.sleep(2000);
     }
