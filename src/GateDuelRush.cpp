@@ -45,7 +45,7 @@ void GateDuelRush::run(int level) {
     int monsterCount = 0;
     if (res) std::cout << "[INFO] Duel started. Waiting for initial phase..." << std::endl;
     bool skipBP = false;
-    while (!duel.isOver() && turnCount < 12) {        
+    while (!duel.isOver() && turnCount < 16) {        
         turnCount++;
         std::cout << "[INFO] Waiting for player's turn." << std::endl;
         res = screen.waitFor_noexcept(PLAYER_DRAW, [&]() { return duel.draw(); }, 30000, 100);
@@ -127,7 +127,7 @@ void GateDuelRush::run(int level) {
         }
         handler.checkConnectionError();
         handler.handleOutlierEvent();
-        screen.sleep(2000);
+        screen.sleep(1000);
     }
     std::cout << "[INFO] Ready for the next duel!" << std::endl;
 }   
