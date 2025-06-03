@@ -8,6 +8,7 @@
 
 void GateDuelRush::run(int level) {
     GameScreen& screen = GameScreen::getInstance();
+    GameException handler;
     RushDuel duel;
     
 
@@ -65,44 +66,37 @@ void GateDuelRush::run(int level) {
                 tries++;
         }
 
-        if (duel.isPlayerTurnOne() && !duel.isOver()) {
+        if (!skipBP && duel.isPlayerTurnOne()) {
             std::cout << "[INFO] Skipping battle phase...\n";
             skipBP = true;
         }
         
         if(!skipBP){
-            if (!duel.isBattlePhase() && !duel.isOver()) {
-                std::cout << "[INFO] Switching to battle phase..." << std::endl;
-                screen.waitFor_noexcept(SELECT_PHASE_BUTTON, [&]() { return duel.selectPhase(); }, 10000, 100);
-                if (!screen.waitFor_noexcept(BATTLE_BUTTON, [&]() { return duel.enterBattlePhase(); }, 5000, 100)) {
-                    std::cout << "[INFO] Failed to enter battle phase. Ending turn..." << std::endl;
-                    res = screen.waitFor_noexcept(END_TURN_BUTTON, [&]() { return duel.endTurn(); }, 10000, 100);
-                    if(res) std::cout << "Turn ended.\n";
-                    screen.sleep(7000);
-                    continue;
-                }
+            std::cout << "[INFO] Switching to battle phase..." << std::endl;
+            screen.waitFor_noexcept(SELECT_PHASE_BUTTON, [&]() { return duel.selectPhase(); }, 10000, 100);
+            if (!screen.waitFor_noexcept(BATTLE_BUTTON, [&]() { return duel.enterBattlePhase(); }, 5000, 100)) {
+                std::cout << "[INFO] Failed to enter battle phase. Ending turn..." << std::endl;
+                res = screen.waitFor_noexcept(END_TURN_BUTTON, [&]() { return duel.endTurn(); }, 10000, 100);
+                if(res) std::cout << "Turn ended.\n";
+                screen.sleep(7000);
+                continue;
             }
-        
             std::cout << "[INFO] Starting attacks..." << std::endl;
-            screen.sleep(3000);
             int attacks = 0;
-            while (attacks < monsterCount && duel.isBattlePhase() && !duel.isOver()) {
-                GameException handler;
+            while (attacks < monsterCount && !duel.isOver()) {
                 auto attacked = screen.waitFor_noexcept(ATTACK_BUTTON, [&]() { return duel.dragAttack(); }, 10000, 100);
                 if(attacked){
                     std::cout << "Attack performed!\n"; 
                     attacks++;
                 }
                 handler.checkConnectionError();
-                screen.sleep(1000);
             }
         }
             
         std::cout << "[INFO] Ending turn..." << std::endl;
         skipBP = false;
-        if(!duel.isOver())
-            screen.waitFor_noexcept(SELECT_PHASE_BUTTON, [&]() { return duel.selectPhase(); }, 5000, 100);
         if(!duel.isOver()){
+            screen.waitFor_noexcept(SELECT_PHASE_BUTTON, [&]() { return duel.selectPhase(); }, 5000, 100);
             res = screen.waitFor_noexcept(END_TURN_BUTTON, [&]() { return duel.endTurn(); }, 5000, 100);
             if(res) {
                 std::cout << "Turn ended\n";
@@ -112,10 +106,9 @@ void GateDuelRush::run(int level) {
         turnCount++;
     }
 
-    GameException handler;
     std::cout << "[INFO] Duel ended. Confirming result...\n";
     screen.waitFor(OK_BUTTON, [&]() { return screen.clickOkButton(); }, 10000, 100);
-    screen.sleep(3000);
+    screen.sleep(2000);
 
     std::cout << "[INFO] Returning to gate to start next duel..." << "\n";
     tries = 0;
