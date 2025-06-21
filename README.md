@@ -50,8 +50,7 @@ bin/appDuelBot.exe
 - **Gate Duel (RUSH)**
 - **Raid Duel**
 
-You’ll be able to select the mode once the GUI launches.
-
+Set up your deck and switch to the home screen (street or character view) before running!
 ---
 
 ## ☕ Maintenance & Support
