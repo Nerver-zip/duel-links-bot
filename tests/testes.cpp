@@ -443,41 +443,55 @@ int main() {
     double confidence = 0.0;
     double confidenceMascara = 0.0;
 
-    thread displayThread(processComponent, componentPaths[HIGHLIGHTED_MONSTER3]);
+    thread displayThread(processComponent, componentPaths[DRAW_DECK5]);
 
     while (true) {
-        MatchResult resultadoMascara = findComponentWithMask(componentPaths[HIGHLIGHTED_MONSTER3], accuracy, confidenceMascara);
-        MatchResult resultadoSemMascara = findComponent(componentPaths[HIGHLIGHTED_MONSTER3], accuracy, confidence);
-
         cout << "--- Comparacao ---\n";
+
+        // Tempo para findComponentWithMask
+        auto startMascara = chrono::high_resolution_clock::now();
+        MatchResult resultadoMascara = findComponentWithMask(componentPaths[DRAW_DECK5], accuracy, confidenceMascara);
+        auto endMascara = chrono::high_resolution_clock::now();
+        auto durationMascara = chrono::duration_cast<chrono::milliseconds>(endMascara - startMascara).count();
+
         if (resultadoMascara.found) {
             cout << "[COM mask]     Encontrado em: " 
                  << resultadoMascara.coordinates.first << ", " 
                  << resultadoMascara.coordinates.second 
-                 << " | Confianca: " << confidenceMascara << "\n";
-        
-            if (confidenceMascara >= accuracy) {
-                leftClick(resultadoMascara.coordinates.first, resultadoMascara.coordinates.second, scale);
-                cout << "[COM mask]     Clicado!\n";
-            }
+                 << " | Confianca: " << confidenceMascara 
+                 << " | Tempo: " << durationMascara << " ms\n";
+
+            //if (confidenceMascara >= accuracy) {
+            //    leftClick(resultadoMascara.coordinates.first, resultadoMascara.coordinates.second, scale);
+            //    cout << "[COM mask]     Clicado!\n";
+            //}
         } else {
-            cout << "[COM mask]     NAO encontrado | Confianca: " << confidenceMascara << "\n";
+            cout << "[COM mask]     NAO encontrado | Confianca: " 
+                 << confidenceMascara << " | Tempo: " << durationMascara << " ms\n";
         }
 
-        //if (resultadoSemMascara.found) {
-        //    cout << "[SEM mask]     Encontrado em: " 
-        //         << resultadoSemMascara.coordinates.first << ", " 
-        //         << resultadoSemMascara.coordinates.second 
-        //         << " | Confianca: " << confidence << "\n";
+        // Tempo para findComponent (sem máscara)
+        auto startSemMascara = chrono::high_resolution_clock::now();
+        MatchResult resultadoSemMascara = findComponent(componentPaths[DRAW_DECK5], accuracy, confidence);
+        auto endSemMascara = chrono::high_resolution_clock::now();
+        auto durationSemMascara = chrono::duration_cast<chrono::milliseconds>(endSemMascara - startSemMascara).count();
 
-        //    //Se a confiança for suficiente, faz o clique
-        //    if (confidence >= accuracy) {
-        //        leftClick(resultadoSemMascara.coordinates.first, resultadoSemMascara.coordinates.second, scale);
-        //        cout << "[SEM mask]     Clicado!\n";
-        //    }
-        //} else {
-        //    cout << "[SEM mask]     NAO encontrado | Confianca: " << confidence << "\n";
-        //}
+        
+        if (resultadoSemMascara.found) {
+            cout << "[SEM mask]     Encontrado em: " 
+                 << resultadoSemMascara.coordinates.first << ", " 
+                 << resultadoSemMascara.coordinates.second 
+                 << " | Confianca: " << confidence 
+                 << " | Tempo: " << durationSemMascara << " ms\n";
+
+            //if (confidence >= accuracy) {
+            //    leftClick(resultadoSemMascara.coordinates.first, resultadoSemMascara.coordinates.second, scale);
+            //    cout << "[SEM mask]     Clicado!\n";
+            //}
+        } else {
+            cout << "[SEM mask]     NAO encontrado | Confianca: " 
+                 << confidence << " | Tempo: " << durationSemMascara << " ms\n";
+        }
 
         cout << "------------------\n";
 

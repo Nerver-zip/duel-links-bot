@@ -1,24 +1,33 @@
+#define _WIN32_WINNT 0x0600
 #include "GameScreen.h"
 #include "Util.h"
 #include "MouseEvents.h"
 #include "GameException.h"
 #include <thread>
 #include <chrono>
+#include <windows.h>
+#include <atomic>
 
 using namespace cv;
 
-GameScreen GameScreen::instance(_1920x1080, 0.9);
+static inline std::atomic<bool> keepRunning = true;
+
+GameScreen GameScreen::instance;
 bool GameScreen::initialized = false;
 
-GameScreen::GameScreen(const Resolution dimensions, float scale) : dimensions(dimensions), scale(scale) {}
+GameScreen::GameScreen() : dimensions(_1920x1080), scale(1.25f) {}
+GameScreen::GameScreen(const Resolution dimensions, float scale)
+    : dimensions(dimensions), scale(scale) {}
 
-GameScreen& GameScreen::init(const Resolution dimensions, float scale) {
-    if(!initialized){
-        instance = GameScreen(dimensions, scale);
+GameScreen& GameScreen::init(const Resolution dimensions, float userScale) {
+    if (!initialized) {
+        BOOL isDpiAware = IsProcessDPIAware();
+
+        float correctedScale = isDpiAware ? 1.0f : userScale;
+
+        instance = GameScreen(dimensions, correctedScale);
         initialized = true;
     }
-    else
-        std::cerr << "GameScreen already initialized" << "\n";
     return instance;
 }
 
@@ -28,6 +37,36 @@ GameScreen& GameScreen::getInstance() {
 
 Resolution GameScreen::getResolution(){
     return this->dimensions;
+}
+
+std::string GameScreen::getInitStatus() const {
+    std::stringstream ss;
+    ss << "Resolution: ";
+    switch (dimensions) {
+        case _1280x720: ss << "1280x720"; break;
+        case _1600x900: ss << "1600x900"; break;
+        case _1920x1080: ss << "1920x1080"; break;
+        default: ss << "Unknown"; break;
+    }
+    ss << " | Zoom: " << scale;
+    return ss.str();
+}
+
+std::string GameScreen::getCurrentInitStatus() {
+    if (!initialized) return "GameScreen not initialized.";
+    return instance.getInitStatus();
+}
+
+void GameScreen::stop() {
+    keepRunning.store(false);
+}
+
+void GameScreen::resume() {
+    keepRunning.store(true);
+}
+
+bool GameScreen::isRunning() {
+    return keepRunning.load();
 }
 
 float GameScreen::getScale(){
@@ -44,6 +83,8 @@ bool GameScreen::waitFor(const Component& c, std::function<bool()> predicate, in
     while (!predicate()) {
         auto now = std::chrono::steady_clock::now();
         auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(now - start);
+        if(!isRunning())
+            throw GameException("Stopping execution...\n");
         if (elapsed.count() > timeout_ms) {
             std::cerr << "Time out while waiting for " << to_string(c) << "\n";
             return false;
@@ -59,6 +100,8 @@ bool GameScreen::waitFor_noexcept(const Component& c, std::function<bool()> pred
     while (!predicate()) {
         auto now = std::chrono::steady_clock::now();
         auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(now - start);
+        if(!isRunning())
+            throw GameException("Stopping execution...\n");
         if (elapsed.count() > timeout_ms) {
             std::cerr << "Time out while waiting for " << to_string(c) << "\n";
             return false;

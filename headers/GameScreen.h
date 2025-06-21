@@ -6,6 +6,7 @@
 #include <iostream>
 #include <unordered_map>
 #include <functional>
+#include <atomic>
 #include "Util.h"
 
 class GameScreen {
@@ -14,7 +15,9 @@ private:
     Resolution dimensions;
     float scale;
 
+    GameScreen();
     GameScreen(const Resolution dimensions, float scale);
+
     static bool initialized;
     static GameScreen instance;
 
@@ -133,15 +136,18 @@ private:
     };
 
     void screenshot();
-
     MatchResult findComponent(const std::string& path, float accuracy);
     cv::Mat resizeComponent(const cv::Mat& original);
 
 public:
     GameScreen(const GameScreen&) = delete;
-
+    std::string getInitStatus() const;
+    static std::string getCurrentInitStatus();
     static GameScreen& init(const Resolution dimensions, float scale);
     static GameScreen& getInstance();
+    static void stop();      
+    static void resume();         
+    static bool isRunning();  
 
     void sleep(int ms);
     bool waitFor(const Component& c, std::function<bool()> predicate, int timeout_ms, int interval_ms);

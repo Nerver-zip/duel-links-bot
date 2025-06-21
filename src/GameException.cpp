@@ -8,6 +8,12 @@
 #include "Util.h"
 #include "GameException.h"
 
+bool GameException::checkRunning(){
+    if (!GameScreen::getInstance().isRunning())
+        throw GameException("Stopping execution...\n");
+    return true;
+}
+
 bool GameException::checkConnectionError(){
     GameScreen& screen = GameScreen::getInstance();
     screen.updateScreen();
@@ -37,7 +43,7 @@ bool GameException::handleConnectionError(){
         exception = screen.findComponent(ERROR_SCREEN);
         count++;
         if (count == 100)
-            throw std::runtime_error("Connection failed.\n");
+            throw GameException("Connection failed.\n");
     }
     return exception;
 }
